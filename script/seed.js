@@ -2,15 +2,49 @@
 
 const db = require('../server/db')
 const {User} = require('../server/db/models')
+const {Constellation} = require('../server/db/models')
+const faker = require('faker')
 
 async function seed() {
   await db.sync({force: true})
   console.log('db synced!')
 
-  const users = await Promise.all([
-    User.create({email: 'cody@email.com', password: '123'}),
-    User.create({email: 'murphy@email.com', password: '123'})
-  ])
+  // const users = await Promise.all([
+  //   User.create({email: 'cody@email.com', password: '123', username: 'hey'}),
+  //   User.create({email: 'murphy@email.com', password: '123', username: 'joh'})
+  // ])
+
+  // for (const student of students) {
+  //   const createdStudent = await Student.create(student);
+  //   createdStudents.push(createdStudent);
+  // }
+
+  const users = []
+  const constellations = []
+
+  for (let i = 0; i < 20; i++) {
+    users.push({
+      username: faker.internet.userName(),
+      email: faker.internet.email(),
+      password: faker.internet.password()
+    })
+  }
+
+  const userInstance = await User.bulkCreate(users)
+
+  for (let i = 0; i < 20; i++) {
+    constellations.push({
+      name: faker.lorem.word(),
+      quanity: faker.random.number(),
+      price: faker.commerce.price(),
+      description: faker.commerce.productDescription(),
+      imageUrl: faker.image.nature(),
+      location: faker.address.nearbyGPSCoordinate(),
+      disclaimer: faker.lorem.sentence()
+    })
+  }
+
+  const constellationInstance = await Constellation.bulkCreate(constellations)
 
   console.log(`seeded ${users.length} users`)
   console.log(`seeded successfully`)
