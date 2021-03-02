@@ -1,7 +1,9 @@
 const Sequelize = require('sequelize')
 const pkg = require('../../package.json')
+// check later
+// const databaseName = pkg.name + (process.env.NODE_ENV === 'test' ? '-test' : '')
 
-const databaseName = pkg.name + (process.env.NODE_ENV === 'test' ? '-test' : '')
+const databaseName = 'GraceShopper'
 
 let config
 
