@@ -1,12 +1,12 @@
 const router = require('express').Router()
 //ensure model name matches new db
-const {Constellation} = require('../db/models')
+const {Product} = require('../db/models')
 module.exports = router
 
 // GET api/products
 router.get('/', async (req, res, next) => {
   try {
-    const products = await Constellation.findAll()
+    const products = await Product.findAll()
     res.json(products)
   } catch (err) {
     next(err)
@@ -17,7 +17,7 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:productId', async (req, res, next) => {
   try {
-    const product = await Constellation.findOne({
+    const product = await Product.findOne({
       where: {
         id: req.params.productId
       }
