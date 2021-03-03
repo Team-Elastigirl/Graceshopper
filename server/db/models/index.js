@@ -1,8 +1,8 @@
 const User = require('./user')
-const Constellation = require('./constellation')
+const Product = require('./product')
 
-Constellation.belongsToMany(User, {through: 'Booking'})
-User.belongsToMany(Constellation, {through: 'Booking'})
+Product.belongsToMany(User, {through: 'Booking'})
+User.belongsToMany(Product, {through: 'Booking'})
 
 /**
  * If we had any associations to make, this would be a great place to put them!
@@ -19,5 +19,5 @@ User.belongsToMany(Constellation, {through: 'Booking'})
  */
 module.exports = {
   User,
-  Constellation
+  Product
 }

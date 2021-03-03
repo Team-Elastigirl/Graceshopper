@@ -2,7 +2,7 @@
 
 const db = require('../server/db')
 const {User} = require('../server/db/models')
-const {Constellation} = require('../server/db/models')
+const {Product} = require('../server/db/models')
 const faker = require('faker')
 
 async function seed() {
@@ -20,7 +20,7 @@ async function seed() {
   // }
 
   const users = []
-  const constellations = []
+  const products = []
 
   for (let i = 0; i < 20; i++) {
     users.push({
@@ -33,7 +33,7 @@ async function seed() {
   const userInstance = await User.bulkCreate(users)
 
   for (let i = 0; i < 20; i++) {
-    constellations.push({
+    products.push({
       name: faker.lorem.word(),
       quanity: faker.random.number(),
       price: faker.commerce.price(),
@@ -44,7 +44,7 @@ async function seed() {
     })
   }
 
-  const constellationInstance = await Constellation.bulkCreate(constellations)
+  const productInstance = await Product.bulkCreate(products)
 
   console.log(`seeded ${users.length} users`)
   console.log(`seeded successfully`)
