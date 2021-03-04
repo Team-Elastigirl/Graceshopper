@@ -4,42 +4,27 @@ import {Link} from 'react-router-dom'
 import {fetchSingleProduct} from '../store/singleProduct'
 
 export class SingleProduct extends React.Component {
-  // constructor() {
-  //   super();
-  //   this.state = {}
-  // }
+  componentDidMount() {
+    this.props.getSingleProduct(this.props.match.params.productId)
+  }
 
   render() {
-    //const singleProduct = this.props.singleProduct
-
+    //console.log('render',this.props.singleProduct)
+    const singleProduct = this.props.singleProduct
     return (
       <div>
-        <h1>{n}</h1>
-        {/* <div className="products">
-        {productsArray.length ? (
-          productsArray.map(product => (
-            <div className="solo-product" key={productsArray.id}>
-              <Link to={`/products/${product.id}`}>
-                <h3>{product.name}</h3>
-                <img
-                  src={product.imageUrl}
-                  allt={product.name}
-                  style={{width: '400px'}}
-                />
-                <p>{product.price}</p>
-                <p>{product.location}</p>
-                <p>{product.description}</p>
-                <p>{product.disclaimer}</p>
-              </Link>
-            </div>
-          ))
-        ) : (
-          <h3>
-            Booked Out! No available Constellation Trips at this time, check
-            again soon!
-          </h3>
-        )}
-      </div> */}
+        <h1>{singleProduct.name}</h1>
+        <div className="singleCampus">
+          <img
+            src={singleProduct.imageUrl}
+            alt={singleProduct.name}
+            style={{width: '400px'}}
+          />
+          <p>{singleProduct.price}</p>
+          <p>{singleProduct.location}</p>
+          <p>{singleProduct.description}</p>
+          <p>{singleProduct.disclaimer}</p>
+        </div>
       </div>
     )
   }
@@ -53,7 +38,7 @@ const mapState = state => {
 }
 
 const mapDispatch = dispatch => {
-  console.log('inside mapDispatch - pink')
+  console.log('my mapDispatch - pink')
   return {
     getSingleProduct: productId => dispatch(fetchSingleProduct(productId))
   }
