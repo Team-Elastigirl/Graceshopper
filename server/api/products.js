@@ -22,6 +22,8 @@ router.get('/:productId', async (req, res, next) => {
         id: req.params.productId
       }
     })
+    // const product = await Product.findByPk(req.params.productId)
+
     if (!product) return res.send('Product Not Found').status(404)
     res.json(product)
   } catch (err) {
