@@ -1,26 +1,18 @@
 'use strict'
-
+// TODO: user/product id is NULL
 const db = require('../server/db')
 const {User} = require('../server/db/models')
 const {Product} = require('../server/db/models')
+const {Order} = require('../server/db/models')
 const faker = require('faker')
 
 async function seed() {
   await db.sync({force: true})
   console.log('db synced!')
 
-  // const users = await Promise.all([
-  //   User.create({email: 'cody@email.com', password: '123', username: 'hey'}),
-  //   User.create({email: 'murphy@email.com', password: '123', username: 'joh'})
-  // ])
-
-  // for (const student of students) {
-  //   const createdStudent = await Student.create(student);
-  //   createdStudents.push(createdStudent);
-  // }
-
   const users = []
   const products = []
+  const orders = []
 
   for (let i = 0; i < 20; i++) {
     users.push({
@@ -30,7 +22,9 @@ async function seed() {
     })
   }
 
-  const userInstance = await User.bulkCreate(users)
+  const userInstances = await User.bulkCreate(users)
+  console.log(`seeded ${users.length} users`)
+  console.log('USER 1', userInstances[0])
 
   for (let i = 0; i < 20; i++) {
     products.push({
@@ -44,10 +38,20 @@ async function seed() {
     })
   }
 
-  const productInstance = await Product.bulkCreate(products)
+  const productInstances = await Product.bulkCreate(products)
+  console.log(`seeded ${products.length} products`)
 
-  console.log(`seeded ${users.length} users`)
-  console.log(`seeded successfully`)
+  for (let i = 0; i < 20; i++) {
+    orders.push({
+      orderStatus: faker.lorem.word(),
+      subtotal: faker.commerce.price(),
+      userId: userInstances[0].id
+    })
+  }
+
+  const orderInstances = await Order.bulkCreate(orders)
+
+  console.log(`seeded ${orders.length} orders`)
 }
 
 // We've separated the `seed` function from the `runSeed` function.
