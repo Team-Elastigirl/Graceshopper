@@ -1,0 +1,19 @@
+diff a/client/store/products.js b/client/store/products.js	(rejected hunks)
+@@ -30,9 +30,8 @@ const productsReducer = (state = initialState, action) => {
+-    switch (action.type) {
+-        case SET_PRODUCTS:
+-            console.log('in reducer', state, 'action.products-->', action.type)
+-            return action.products;
+-        default:
+-            return state;
+-    }
+-};
+-
++  switch (action.type) {
++    case SET_PRODUCTS:
++      console.log('in reducer', state, 'action.products-->', action.type)
++      return action.products
++    default:
++      return state
++  }
++}
