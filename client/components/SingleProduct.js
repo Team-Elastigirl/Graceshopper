@@ -10,11 +10,11 @@ export class SingleProduct extends React.Component {
   // }
 
   render() {
-    const singleProduct = this.props.singleProduct
+    //const singleProduct = this.props.singleProduct
 
     return (
       <div>
-        <h1>{singleProduct.name}</h1>
+        <h1>{n}</h1>
         {/* <div className="products">
         {productsArray.length ? (
           productsArray.map(product => (
