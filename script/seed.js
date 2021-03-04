@@ -1,27 +1,21 @@
 'use strict'
-
+// TODO: user/product id is NULL
 const db = require('../server/db')
 const {User} = require('../server/db/models')
 const {Product} = require('../server/db/models')
+const {Order, Booking} = require('../server/db/models')
 const faker = require('faker')
 
 async function seed() {
   await db.sync({force: true})
   console.log('db synced!')
 
-  // const users = await Promise.all([
-  //   User.create({email: 'cody@email.com', password: '123', username: 'hey'}),
-  //   User.create({email: 'murphy@email.com', password: '123', username: 'joh'})
-  // ])
-
-  // for (const student of students) {
-  //   const createdStudent = await Student.create(student);
-  //   createdStudents.push(createdStudent);
-  // }
-
   const users = []
   const products = []
+  const orders = []
+  const bookings = []
 
+  // Users
   for (let i = 0; i < 20; i++) {
     users.push({
       username: faker.internet.userName(),
@@ -30,13 +24,16 @@ async function seed() {
     })
   }
 
-  const userInstance = await User.bulkCreate(users)
+  const userInstances = await User.bulkCreate(users)
+  console.log(`seeded ${users.length} users`)
+  // console.log('USER 1', userInstances[0])
 
+  // Products
   for (let i = 0; i < 20; i++) {
     products.push({
       name: faker.lorem.word(),
       quanity: faker.random.number(),
-      price: faker.commerce.price(),
+      price: i * 100 + 1,
       description: faker.commerce.productDescription(),
       imageUrl: faker.image.nature(),
       location: faker.address.nearbyGPSCoordinate(),
@@ -44,10 +41,38 @@ async function seed() {
     })
   }
 
-  const productInstance = await Product.bulkCreate(products)
+  const productInstances = await Product.bulkCreate(products)
+  console.log(`seeded ${products.length} products`)
 
-  console.log(`seeded ${users.length} users`)
-  console.log(`seeded successfully`)
+  // COMMENTED OUT FOR CONFLICTS
+
+  // // Orders
+  // for (let i = 0; i < 20; i++) {
+  //   orders.push({
+  //     orderStatus: faker.lorem.word(),
+  //     subtotal: i*1000+1,
+  //     userId: i+1
+  //   })
+  // }
+
+  // const orderInstances = await Order.bulkCreate(orders)
+  // console.log(`seeded ${orders.length} orders`)
+
+  // // Bookings
+  // for (let i = 0; i < 20; i++) {
+  //   let prodID = i+1
+  //   let orderID = i%15+1
+
+  //   bookings.push({
+  //     productId: prodID,
+  //     orderId: orderID,
+  //     unitPrice: i*100+1,
+  //     quantity: i*10+1
+  //   })
+  // }
+
+  // const bookingInstances = await Booking.bulkCreate(bookings)
+  // console.log(`seeded ${bookings.length} bookings`)
 }
 
 // We've separated the `seed` function from the `runSeed` function.
