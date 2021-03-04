@@ -1,20 +1,29 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
-import {fetchProducts} from '../store/products'
+import {addToCart, fetchProducts} from '../store/products'
 
 /**
  * COMPONENT
  */
 export class AllProducts extends React.Component {
+  // constructor() {
+  //   super();
+  //   //this.state = store.getState();
+  //   //this.handleClick = this.handleClick.bind(this);
+  // }
+
   componentDidMount() {
     // console.log(this.props)
     this.props.getProducts()
   }
 
+  handleClick = id => {
+    this.props.addToCart(id)
+  }
+
   render() {
-    //const {products} = this.props
-    console.log(this.props, 'red')
+    // console.log(this.props, 'red')
     let productsArray = this.props.products
 
     return (
@@ -23,7 +32,7 @@ export class AllProducts extends React.Component {
         <div className="products">
           {productsArray.length ? (
             productsArray.map(product => (
-              <div className="solo-product" key={productsArray.id}>
+              <div className="solo-product" key={product.id}>
                 <Link to={`/products/${product.id}`}>
                   <h3>{product.name}</h3>
                   <img
@@ -33,6 +42,15 @@ export class AllProducts extends React.Component {
                   />
                   <p>{product.price}</p>
                   <p>{product.location}</p>
+                  <button
+                    type="button"
+                    className="add-to-cart"
+                    onClick={() => {
+                      this.handleClick(product.id)
+                    }}
+                  >
+                    Add to Cart
+                  </button>
                   <p>{product.description}</p>
                   <p>{product.disclaimer}</p>
                 </Link>
@@ -60,7 +78,8 @@ const mapState = state => {
 const mapDispatch = dispatch => {
   console.log('inside mapDispatch - purple')
   return {
-    getProducts: () => dispatch(fetchProducts())
+    getProducts: () => dispatch(fetchProducts()),
+    addToCart: id => dispatch(addToCart(id))
   }
 }
 
