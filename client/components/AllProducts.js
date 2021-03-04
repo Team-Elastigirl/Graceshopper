@@ -37,7 +37,7 @@ export class AllProducts extends React.Component {
                   <h3>{product.name}</h3>
                   <img
                     src={product.imageUrl}
-                    allt={product.name}
+                    alt={product.name}
                     style={{width: '400px'}}
                   />
                   <p>{product.price}</p>
