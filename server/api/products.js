@@ -5,10 +5,13 @@ module.exports = router
 
 // GET api/products
 router.get('/', async (req, res, next) => {
+  console.log('GET api/products')
   try {
     const products = await Product.findAll()
+    console.log(products)
     res.json(products)
   } catch (err) {
+    console.log('error thrown')
     next(err)
   }
 })
