@@ -1,9 +1,10 @@
 const User = require('./user')
 const Product = require('./product')
 const Order = require('./order')
+const Booking = require('./booking')
 
-Product.belongsToMany(Order, {through: 'Booking'})
-Order.belongsToMany(Product, {through: 'Booking'})
+Product.belongsToMany(Order, {through: Booking})
+Order.belongsToMany(Product, {through: Booking})
 
 // User has many orders
 // Order only has ONE user
@@ -19,5 +20,6 @@ Order.belongsTo(User)
 module.exports = {
   User,
   Product,
-  Order
+  Order,
+  Booking
 }

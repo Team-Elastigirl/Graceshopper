@@ -12,7 +12,7 @@ const Order = db.define('order', {
     type: Sequelize.STRING // in cart, purchased, processing, shipped
   },
   subtotal: {
-    type: Sequelize.DECIMAL(10, 2),
+    type: Sequelize.INTEGER,
     allowNull: false,
     validate: {
       min: 0

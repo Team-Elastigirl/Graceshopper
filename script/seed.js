@@ -3,7 +3,7 @@
 const db = require('../server/db')
 const {User} = require('../server/db/models')
 const {Product} = require('../server/db/models')
-const {Order} = require('../server/db/models')
+const {Order, Booking} = require('../server/db/models')
 const faker = require('faker')
 
 async function seed() {
@@ -13,7 +13,9 @@ async function seed() {
   const users = []
   const products = []
   const orders = []
+  const bookings = []
 
+  // Users
   for (let i = 0; i < 20; i++) {
     users.push({
       username: faker.internet.userName(),
@@ -24,13 +26,14 @@ async function seed() {
 
   const userInstances = await User.bulkCreate(users)
   console.log(`seeded ${users.length} users`)
-  console.log('USER 1', userInstances[0])
+  // console.log('USER 1', userInstances[0])
 
+  // Products
   for (let i = 0; i < 20; i++) {
     products.push({
       name: faker.lorem.word(),
       quanity: faker.random.number(),
-      price: faker.commerce.price(),
+      price: i * 100 + 1,
       description: faker.commerce.productDescription(),
       imageUrl: faker.image.nature(),
       location: faker.address.nearbyGPSCoordinate(),
@@ -41,17 +44,35 @@ async function seed() {
   const productInstances = await Product.bulkCreate(products)
   console.log(`seeded ${products.length} products`)
 
-  for (let i = 0; i < 20; i++) {
-    orders.push({
-      orderStatus: faker.lorem.word(),
-      subtotal: faker.commerce.price(),
-      userId: userInstances[0].id
-    })
-  }
+  // COMMENTED OUT FOR CONFLICTS
 
-  const orderInstances = await Order.bulkCreate(orders)
+  // // Orders
+  // for (let i = 0; i < 20; i++) {
+  //   orders.push({
+  //     orderStatus: faker.lorem.word(),
+  //     subtotal: i*1000+1,
+  //     userId: i+1
+  //   })
+  // }
 
-  console.log(`seeded ${orders.length} orders`)
+  // const orderInstances = await Order.bulkCreate(orders)
+  // console.log(`seeded ${orders.length} orders`)
+
+  // // Bookings
+  // for (let i = 0; i < 20; i++) {
+  //   let prodID = i+1
+  //   let orderID = i%15+1
+
+  //   bookings.push({
+  //     productId: prodID,
+  //     orderId: orderID,
+  //     unitPrice: i*100+1,
+  //     quantity: i*10+1
+  //   })
+  // }
+
+  // const bookingInstances = await Booking.bulkCreate(bookings)
+  // console.log(`seeded ${bookings.length} bookings`)
 }
 
 // We've separated the `seed` function from the `runSeed` function.
