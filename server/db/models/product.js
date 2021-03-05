@@ -47,6 +47,6 @@ const Product = db.define('product', {
   }
 })
 
-// TODO: async class method: find by id
+
 
 module.exports = Product
