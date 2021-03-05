@@ -15,3 +15,14 @@ router.get('/', async (req, res, next) => {
     next(err)
   }
 })
+
+// GET /api/:userId
+router.get('/:userId', async (req, res, next) => {
+  try {
+    const user = await User.findByPk(req.params.userId)
+    if (!user) return res.sendStatus(404)
+    res.json(user)
+  } catch (err) {
+    next(err)
+  }
+})
