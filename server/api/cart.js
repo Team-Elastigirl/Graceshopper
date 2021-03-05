@@ -64,7 +64,7 @@ router.put('/:productId', async (req, res, next) => {
   res.redirect('/')
 })
 
-// Post api/cart/:productId  puts guest's items on a cart in session store
+// Post api/cart/:productId  puts guest's items on a cart in session store.
 router.post('/add/:productId', async (req, res, next) => {
   const productId = req.params.productId
   const {quantity, unitPrice, userId} = req.body
