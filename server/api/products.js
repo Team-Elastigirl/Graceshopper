@@ -7,7 +7,7 @@ module.exports = router
 router.get('/', async (req, res, next) => {
   try {
     const products = await Product.findAll()
-    console.log(products)
+    // console.log(products)
     res.json(products)
   } catch (err) {
     console.log('error thrown')
@@ -65,7 +65,7 @@ router.delete('/:productId', async (req, res, next) => {
 
 //PUT /api/products/:productId
 router.put('/:productId', async (req, res, next) => {
-  console.log(req.body)
+  // console.log(req.body)
   try {
     const {
       name,

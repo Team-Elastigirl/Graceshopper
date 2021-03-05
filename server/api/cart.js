@@ -31,7 +31,7 @@ router.get('/', async (req, res, next) => {
 
 // PUT api/cart/:productId edits the cart
 // TODO: adjusts logic for session
-router.put('/cart/:productId', async (req, res, next) => {
+router.put('/:productId', async (req, res, next) => {
   // req.body. needs updated quanity and unit price
   const productId = req.params.productId
   const {quantity, unitPrice, userId} = req.body
@@ -100,7 +100,7 @@ router.post('/add/:productId', async (req, res, next) => {
     }
     cart.add(foundProduct, foundProduct.id)
     req.session.cart = cart
-    // console.log('session', req.session.cart)
+    console.log('session here--->', req.session.cart)
     res.redirect('/')
   } catch (error) {
     next(error)
