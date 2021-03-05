@@ -7,23 +7,22 @@ import {addToCart, fetchProducts} from '../store/products'
  * COMPONENT
  */
 export class AllProducts extends React.Component {
-  // constructor() {
-  //   super();
-  //   //this.state = store.getState();
-  //   //this.handleClick = this.handleClick.bind(this);
-  // }
+  constructor(props) {
+    super(props)
+    //this.state = store.getState();
+    this.handleClick = this.handleClick.bind(this)
+  }
 
   componentDidMount() {
     // console.log(this.props)
     this.props.getProducts()
   }
 
-  handleClick = id => {
+  handleClick(id) {
     this.props.addToCart(id)
   }
 
   render() {
-    // console.log(this.props, 'red')
     let productsArray = this.props.products
 
     return (
@@ -37,23 +36,23 @@ export class AllProducts extends React.Component {
                   <h3>{product.name}</h3>
                   <img
                     src={product.imageUrl}
-                    allt={product.name}
+                    alt={product.name}
                     style={{width: '400px'}}
                   />
-                  <p>{product.price}</p>
-                  <p>{product.location}</p>
-                  <button
-                    type="button"
-                    className="add-to-cart"
-                    onClick={() => {
-                      this.handleClick(product.id)
-                    }}
-                  >
-                    Add to Cart
-                  </button>
-                  <p>{product.description}</p>
-                  <p>{product.disclaimer}</p>
                 </Link>
+                <p>{product.price}</p>
+                <p>{product.location}</p>
+                <button
+                  type="button"
+                  className="add-to-cart"
+                  onClick={() => {
+                    this.handleClick(product.id)
+                  }}
+                >
+                  Add to Cart
+                </button>
+                <p>{product.description}</p>
+                <p>{product.disclaimer}</p>
               </div>
             ))
           ) : (
@@ -69,14 +68,12 @@ export class AllProducts extends React.Component {
 }
 
 const mapState = state => {
-  console.log('inside mapState')
   return {
     products: state.products
   }
 }
 
 const mapDispatch = dispatch => {
-  console.log('inside mapDispatch - purple')
   return {
     getProducts: () => dispatch(fetchProducts()),
     addToCart: id => dispatch(addToCart(id))
