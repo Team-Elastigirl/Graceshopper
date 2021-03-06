@@ -3,11 +3,21 @@ const router = require('express').Router()
 const {Product} = require('../db/models')
 module.exports = router
 
+//securing routes
+const adminsOnly = (req, res, next) => {
+  if (!req.user.isAdmin) {
+    const err = new Error('Stop, in the name of law')
+    err.status = 401
+    return next(err)
+  }
+  next()
+}
+
 // GET api/products
 router.get('/', async (req, res, next) => {
   try {
     const products = await Product.findAll()
-    console.log(products)
+    //console.log(products)
     res.json(products)
   } catch (err) {
     console.log('error thrown')
@@ -33,18 +43,29 @@ router.get('/:productId', async (req, res, next) => {
 })
 
 //POST /api/campuses
-router.post('/', async (req, res, next) => {
+//updated post route to be secure
+router.post('/', adminsOnly, async (req, res, next) => {
+  const {
+    name,
+    quanity,
+    price,
+    description,
+    imageUrl,
+    location,
+    disclaimer
+  } = req.body
   try {
-    const product = await Product.create({
-      name: req.body.name,
-      quanity: req.body.quantity,
-      price: req.body.price,
-      description: req.body.description,
-      imageUrl: req.body.imageUrl,
-      location: req.body.location,
-      disclaimer: req.body.disclaimer
+    await Product.create({
+      name,
+      quanity,
+      price,
+      description,
+      imageUrl,
+      location,
+      disclaimer
+    }).then(product => {
+      res.status(201).json(product)
     })
-    res.json(product)
   } catch (err) {
     console.log('Error in post products route')
     next(err)
@@ -52,7 +73,7 @@ router.post('/', async (req, res, next) => {
 })
 
 //DELETE /api/products/:productId
-router.delete('/:productId', async (req, res, next) => {
+router.delete('/:productId', adminsOnly, async (req, res, next) => {
   try {
     await Product.destroy({where: {id: req.params.productId}})
     //send status console not showing?
@@ -64,18 +85,18 @@ router.delete('/:productId', async (req, res, next) => {
 })
 
 //PUT /api/products/:productId
-router.put('/:productId', async (req, res, next) => {
-  console.log(req.body)
+//updated post route to be secure
+router.put('/:productId', adminsOnly, async (req, res, next) => {
+  const {
+    name,
+    quantity,
+    price,
+    description,
+    imageUrl,
+    location,
+    disclaimer
+  } = req.body
   try {
-    const {
-      name,
-      quantity,
-      price,
-      imageUrl,
-      disclaimer,
-      description,
-      location
-    } = req.body
     const product = await Product.findByPk(req.params.productId)
     const updatedProduct = await product.update({
       name,
