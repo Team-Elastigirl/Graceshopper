@@ -1,9 +1,17 @@
 body {
   font-family: sans-serif;
+  background: rgb(255, 255, 255);
 }
 
 a {
   text-decoration: none;
+  color: #23282e;
+  padding-left: 2em;
+}
+
+a:hover {
+  color: rgb(5, 132, 252);
+  font-weight: bold;
 }
 
 label {
@@ -15,7 +23,47 @@ nav a {
   margin: 1em;
 }
 
-form div {
+nav {
+  align-items: center;
+  background-color: #58bcff;
+  font-size: 1.1em;
+  display: flex;
+  flex-flow: row wrap;
+}
+
+/* form div {
   margin: 1em;
   display: inline-block;
+} */
+
+button {
+  background-color: #23282e;
+  font-weight: bolder;
+  padding: 7px;
+  color: rgb(255, 255, 255);
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: rgb(5, 132, 252);
+}
+
+.products {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  align-content: center;
+}
+
+.solo-product {
+  padding: 1em;
+  margin: 1em;
+  border-radius: 4px;
+  border-style: solid;
+  border-width: thin;
+  background-color: rgb(240, 249, 253);
+  color: #23282e;
+  flex: 0 0 1em;
+  width: 425px;
+  align-items: left;
 }

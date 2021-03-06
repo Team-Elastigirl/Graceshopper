@@ -33,15 +33,15 @@ export class AllProducts extends React.Component {
             productsArray.map(product => (
               <div className="solo-product" key={product.id}>
                 <Link to={`/products/${product.id}`}>
-                  <h3>{product.name}</h3>
                   <img
                     src={product.imageUrl}
                     alt={product.name}
                     style={{width: '400px'}}
                   />
+                  <h3>{product.name}</h3>
                 </Link>
-                <p>{product.price}</p>
-                <p>{product.location}</p>
+                <p>Price: ${product.price}</p>
+                <p>Location: {product.location}</p>
                 <button
                   type="button"
                   className="add-to-cart"
@@ -51,7 +51,7 @@ export class AllProducts extends React.Component {
                 >
                   Add to Cart
                 </button>
-                <p>{product.description}</p>
+                <p>Description: {product.description}</p>
                 <p>{product.disclaimer}</p>
               </div>
             ))
