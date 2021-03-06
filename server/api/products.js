@@ -28,12 +28,6 @@ router.get('/', async (req, res, next) => {
 // GET api/products/:productId
 router.get('/:productId', async (req, res, next) => {
   try {
-    // const product = await Product.findOne({
-    //   where: {
-    //     id: req.params.productId
-    //   }
-    // })
-    //more elegant below but above works. Awaiting testing.
     const product = await Product.findByPk(req.params.productId)
     if (!product) return res.send('Product Not Found').status(404)
     res.json(product)
