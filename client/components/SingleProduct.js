@@ -2,6 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 import {fetchSingleProduct} from '../store/singleProduct'
+import EditProduct from './EditProduct'
 
 export class SingleProduct extends React.Component {
   componentDidMount() {
@@ -9,7 +10,6 @@ export class SingleProduct extends React.Component {
   }
 
   render() {
-    //console.log('render',this.props.singleProduct)
     const singleProduct = this.props.singleProduct
     return (
       <div>
@@ -25,20 +25,25 @@ export class SingleProduct extends React.Component {
           <p>{singleProduct.description}</p>
           <p>{singleProduct.disclaimer}</p>
         </div>
+        {this.props.isAdmin ? (
+          <EditProduct singleproduct={singleProduct} />
+        ) : (
+          ''
+        )}
       </div>
     )
   }
 }
 
 const mapState = state => {
-  console.log('my mapState', state)
   return {
-    singleProduct: state.singleProduct
+    singleProduct: state.singleProduct,
+    isAdmin: false
+    // isAdmin: state.user.isAdmin
   }
 }
 
 const mapDispatch = dispatch => {
-  console.log('my mapDispatch - pink')
   return {
     getSingleProduct: productId => dispatch(fetchSingleProduct(productId))
   }

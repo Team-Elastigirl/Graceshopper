@@ -1,7 +1,8 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
-import {addToCart, fetchProducts} from '../store/products'
+import {addToCart, fetchProducts, deleteProduct} from '../store/products'
+import AddProduct from './AddProduct'
 
 /**
  * COMPONENT
@@ -9,7 +10,6 @@ import {addToCart, fetchProducts} from '../store/products'
 export class AllProducts extends React.Component {
   constructor(props) {
     super(props)
-    //this.state = store.getState();
     this.handleClick = this.handleClick.bind(this)
   }
 
@@ -24,7 +24,6 @@ export class AllProducts extends React.Component {
 
   render() {
     let productsArray = this.props.products
-
     return (
       <div>
         <h1>Constellation Getaways</h1>
@@ -53,6 +52,13 @@ export class AllProducts extends React.Component {
                 </button>
                 <p>{product.description}</p>
                 <p>{product.disclaimer}</p>
+                {this.props.isAdmin ? (
+                  <button onClick={() => this.props.deleteProduct(product.id)}>
+                    Delete Product
+                  </button>
+                ) : (
+                  ''
+                )}
               </div>
             ))
           ) : (
@@ -61,6 +67,7 @@ export class AllProducts extends React.Component {
               again soon!
             </h3>
           )}
+          {this.props.isAdmin ? <AddProduct /> : ''}
         </div>
       </div>
     )
@@ -69,14 +76,17 @@ export class AllProducts extends React.Component {
 
 const mapState = state => {
   return {
-    products: state.products
+    products: state.products,
+    isAdmin: true
+    // isAdmin: state.user.isAdmin
   }
 }
 
 const mapDispatch = dispatch => {
   return {
     getProducts: () => dispatch(fetchProducts()),
-    addToCart: id => dispatch(addToCart(id))
+    addToCart: id => dispatch(addToCart(id)),
+    deleteProduct: id => dispatch(deleteProduct(id))
   }
 }
 

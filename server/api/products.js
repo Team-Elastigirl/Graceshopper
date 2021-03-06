@@ -7,7 +7,7 @@ module.exports = router
 router.get('/', async (req, res, next) => {
   try {
     const products = await Product.findAll()
-    console.log(products)
+    // console.log(products)
     res.json(products)
   } catch (err) {
     console.log('error thrown')

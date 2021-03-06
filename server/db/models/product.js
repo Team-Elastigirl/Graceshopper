@@ -18,18 +18,12 @@ const Product = db.define('product', {
     allowNull: false
   },
   description: {
-    type: Sequelize.TEXT,
-    allowNull: false,
-    validate: {
-      notEmpty: true
-    }
+    type: Sequelize.TEXT
   },
   imageUrl: {
     type: Sequelize.TEXT,
-    allowNull: false,
-    validate: {
-      notEmpty: true
-    }
+    defaultValue:
+      'https://i0.wp.com/themindcircle.com/wp-content/uploads/2017/07/3-2.jpg'
   },
   location: {
     type: Sequelize.TEXT,
@@ -39,14 +33,8 @@ const Product = db.define('product', {
     }
   },
   disclaimer: {
-    type: Sequelize.TEXT,
-    allowNull: false,
-    validate: {
-      notEmpty: true
-    }
+    type: Sequelize.TEXT
   }
 })
-
-
 
 module.exports = Product
