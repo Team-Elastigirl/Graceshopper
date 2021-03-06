@@ -1,17 +1,18 @@
 body {
   font-family: sans-serif;
-  background: rgb(255, 255, 255);
+  color: rgb(255, 255, 255);
+  text-align: center;
+  background-image: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=751&q=80');
 }
 
 a {
   text-decoration: none;
-  color: #23282e;
-  padding-left: 2em;
+  color: #df5960;
 }
 
 a:hover {
-  color: rgb(5, 132, 252);
-  font-weight: bold;
+  color: rgb(255, 255, 255);
+  font-weight: bolder;
 }
 
 label {
@@ -20,24 +21,31 @@ label {
 
 nav a {
   display: inline-block;
-  margin: 1em;
+  padding-left: 2em;
 }
 
 nav {
   align-items: center;
-  background-color: #58bcff;
+  background-color: #151b16;
+  color: #ffffff;
   font-size: 1.1em;
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: row nowrap;
+  align-items: center;
+  position: fixed;
+  top: 0px;
+  width: 100%;
+  margin-left: -20px;
+  height: 60px;
+  padding: 10px;
 }
 
-/* form div {
-  margin: 1em;
-  display: inline-block;
-} */
+h1 {
+  color: #ffffff;
+}
 
 button {
-  background-color: #23282e;
+  background-color: #df5960;
   font-weight: bolder;
   padding: 7px;
   color: rgb(255, 255, 255);
@@ -45,7 +53,7 @@ button {
 }
 
 button:hover {
-  background-color: rgb(5, 132, 252);
+  background-color: rgb(93, 98, 102);
 }
 
 .products {
@@ -59,10 +67,10 @@ button:hover {
   padding: 1em;
   margin: 1em;
   border-radius: 4px;
-  border-style: solid;
-  border-width: thin;
-  background-color: rgb(240, 249, 253);
-  color: #23282e;
+  text-align: left;
+
+  background-color: rgb(21, 22, 27);
+  color: #ffffff;
   flex: 0 0 1em;
   width: 425px;
   align-items: left;
