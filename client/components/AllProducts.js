@@ -1,8 +1,10 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
-import {addToCart, fetchProducts, deleteProduct} from '../store/products'
+import {fetchProducts, deleteProduct} from '../store/products'
 import AddProduct from './AddProduct'
+import {addToCart} from '../store/cart'
+
 
 /**
  * COMPONENT
@@ -14,12 +16,13 @@ export class AllProducts extends React.Component {
   }
 
   componentDidMount() {
-    // console.log(this.props)
+    console.log('in the products', this.props)
     this.props.getProducts()
   }
 
-  handleClick(id) {
-    this.props.addToCart(id)
+  handleClick(id, quantity, unitPrice, userId) {
+    console.log(this.props.add)
+    this.props.add(id, {quantity, unitPrice, userId})
   }
 
   render() {
@@ -32,25 +35,30 @@ export class AllProducts extends React.Component {
             productsArray.map(product => (
               <div className="solo-product" key={product.id}>
                 <Link to={`/products/${product.id}`}>
-                  <h3>{product.name}</h3>
                   <img
                     src={product.imageUrl}
                     alt={product.name}
                     style={{width: '400px'}}
                   />
+                  <h3>{product.name}</h3>
                 </Link>
-                <p>{product.price}</p>
-                <p>{product.location}</p>
+                <p>Price: ${product.price}</p>
+                <p>Location: {product.location}</p>
                 <button
                   type="button"
                   className="add-to-cart"
                   onClick={() => {
-                    this.handleClick(product.id)
+                    this.handleClick(
+                      product.id,
+                      product.quantity,
+                      product.price,
+                      this.props.user.id
+                    )
                   }}
                 >
                   Add to Cart
                 </button>
-                <p>{product.description}</p>
+                <p>Description: {product.description}</p>
                 <p>{product.disclaimer}</p>
                 {this.props.isAdmin ? (
                   <button onClick={() => this.props.deleteProduct(product.id)}>
@@ -77,15 +85,16 @@ export class AllProducts extends React.Component {
 const mapState = state => {
   return {
     products: state.products,
-    isAdmin: state.user.isAdmin
+    isAdmin: state.user.isAdmin,
+    user: state.user
   }
 }
 
 const mapDispatch = dispatch => {
   return {
     getProducts: () => dispatch(fetchProducts()),
-    addToCart: id => dispatch(addToCart(id)),
-    deleteProduct: id => dispatch(deleteProduct(id))
+    deleteProduct: id => dispatch(deleteProduct(id)),
+    add: (id, obj) => dispatch(addToCart(id, obj))
   }
 }
 

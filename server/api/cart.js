@@ -5,21 +5,23 @@ module.exports = router
 
 // GET api/cart
 router.get('/', async (req, res, next) => {
-  // if user exits find card in db
-  // if guest get cart from session
-  // in session there should a cart that looks like booking objs
-  // api/cart?userId=123
+  //if guest send the cart on session
   if (!req.query.userId) {
-    res.send(req.session.cart)
+    console.log('inside the req', req.session.cart)
+    return res.send(req.session.cart)
   }
+  console.log('query', req.query.userId)
+  // if user find in db
+  // api/cart?userId=123
   try {
+    // find an order with matching userId and status = in the cart
     const order = await Order.findOne({
-      where: {userId: parseInt(req.query.userId), orderStatus: 'in cart'}
+      where: {userId: parseInt(req.query.userId, 1), orderStatus: 'in cart'}
     })
-    // console.log(order);
+    console.log('found order', order)
+    // find all items/products part of this order
     if (order) {
       const bookings = await Booking.findAll({where: {orderId: order.id}})
-      // console.log('bookings', bookings)
       res.json(bookings)
     } else {
       res.json({})
@@ -29,9 +31,9 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-// PUT api/cart/:productId edits the cart
+// PUT api/cart/:productId modifies the order of the cart
 // TODO: adjusts logic for session
-router.put('/cart/:productId', async (req, res, next) => {
+router.put('/:productId', async (req, res, next) => {
   // req.body. needs updated quanity and unit price
   const productId = req.params.productId
   const {quantity, unitPrice, userId} = req.body
@@ -64,44 +66,54 @@ router.put('/cart/:productId', async (req, res, next) => {
   res.redirect('/')
 })
 
-// Post api/cart/:productId  puts guest's items on a cart in session store
+// Post api/cart/add/:productId
+//makes a booking for an item if an order exists.
+//If an order does not exist, make one and add a booking.
+
 router.post('/add/:productId', async (req, res, next) => {
   const productId = req.params.productId
   const {quantity, unitPrice, userId} = req.body
+  console.log('req.body', req.body)
   if (userId) {
+    // a user is found
     try {
       const tempOrder = await Order.findOrCreate({
         where: {
           userId: req.body.userId,
-          orderStatus: 'in cart',
+          orderStatus: 'in cart'
+        },
+        defaults: {
           orderDate: new Date(),
           subtotal: unitPrice
         }
       })
-      const orderId = tempOrder[0].id
+      const orderId = tempOrder[0].dataValues.id
+      console.log('orderId---->', orderId)
       // TODO: if a booking exists just update that booking instead creating a new booking
-      await Booking.create({
+      const booking = await Booking.create({
         orderId,
         productId,
         quantity,
         unitPrice
       })
-      res.json(tempOrder)
+      return res.json(booking)
     } catch (error) {
       console.log('err', error)
     }
   }
-  //if guest
+  //if guest posts guest's items on a cart in session store.
   try {
     let cart = new Cart(req.session.cart ? req.session.cart : {})
     const foundProduct = await Product.findByPk(productId)
     if (!foundProduct) {
       res.redirect('/')
     }
-    cart.add(foundProduct, foundProduct.id)
-    req.session.cart = cart
-    // console.log('session', req.session.cart)
-    res.redirect('/')
+    // console.log('in the cart route guest', foundProduct)
+
+    cart.add(foundProduct, productId)
+    req.session.cart = cart.generateArray()
+    console.log('session here--->', req.session.cart)
+    res.json(foundProduct)
   } catch (error) {
     next(error)
   }

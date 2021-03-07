@@ -8,6 +8,7 @@ import AllUsers from './AllUsers'
  */
 export const UserHome = props => {
   const {email, isAdmin} = props
+
   return (
     <div>
       <h3>Welcome, {email}</h3>
