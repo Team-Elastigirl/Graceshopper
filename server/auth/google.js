@@ -25,26 +25,37 @@ if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: process.env.GOOGLE_CALLBACK
+    //process.env.GOOGLE_CALLBACK
   }
 
-  const strategy = new GoogleStrategy(
-    googleConfig,
-    (token, refreshToken, profile, done) => {
-      const googleId = profile.id
-      const email = profile.emails[0].value
-      const imgUrl = profile.photos[0].value
-      const firstName = profile.name.givenName
-      const lastName = profile.name.familyName
-      const fullName = profile.displayName
+  //ADD TRY CATCH!!!
 
-      User.findOrCreate({
-        where: {googleId},
-        defaults: {email, imgUrl, firstName, lastName, fullName}
-      })
-        .then(([user]) => done(null, user))
-        .catch(done)
+  const strategy = new GoogleStrategy(googleConfig, async function(
+    token,
+    refreshToken,
+    profile,
+    done
+  ) {
+    try {
+      const googleId = profile.id
+      const username = profile.displayName
+      const email = profile.emails[0].value
+      const imageUrl = profile.photos[0].value
+      // const username = profile.name.givenName
+      //console.log(profile)
+
+      let user = await User.findOne({where: {googleId: googleId}})
+
+      if (!user) {
+        user = await User.create({username, email, googleId, imageUrl})
+        done(null, user)
+      } else {
+        done(null, user)
+      }
+    } catch (err) {
+      done(err)
     }
-  )
+  })
 
   passport.use(strategy)
 
@@ -61,3 +72,15 @@ if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
     })
   )
 }
+
+// const googleId = profile.id
+//         const email = profile.emails[0].value
+//         const imageUrl = profile.photos[0].value
+//         const username = profile.name.givenName
+
+//         User.findOrCreate({
+//           where: {googleId},
+//           defaults: {email, imageUrl, username}
+//         })
+//           .then(([user]) => done(null, user))
+//           .catch(done)
