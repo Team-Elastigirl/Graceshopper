@@ -9,7 +9,8 @@ import {
   AllProducts,
   SingleProduct,
   Cart,
-  Checkout
+  Checkout,
+  AddProduct
 } from './components'
 import {me} from './store'
 import {getCart} from './store/cart'

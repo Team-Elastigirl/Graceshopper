@@ -1,8 +1,10 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
-import {fetchProducts} from '../store/products'
+import {fetchProducts, deleteProduct} from '../store/products'
+import AddProduct from './AddProduct'
 import {addToCart} from '../store/cart'
+
 
 /**
  * COMPONENT
@@ -25,7 +27,6 @@ export class AllProducts extends React.Component {
 
   render() {
     let productsArray = this.props.products
-
     return (
       <div>
         <h1>Constellation Getaways</h1>
@@ -59,6 +60,13 @@ export class AllProducts extends React.Component {
                 </button>
                 <p>Description: {product.description}</p>
                 <p>{product.disclaimer}</p>
+                {this.props.isAdmin ? (
+                  <button onClick={() => this.props.deleteProduct(product.id)}>
+                    Delete Product
+                  </button>
+                ) : (
+                  ''
+                )}
               </div>
             ))
           ) : (
@@ -67,6 +75,7 @@ export class AllProducts extends React.Component {
               again soon!
             </h3>
           )}
+          {this.props.isAdmin ? <AddProduct /> : ''}
         </div>
       </div>
     )
@@ -76,6 +85,7 @@ export class AllProducts extends React.Component {
 const mapState = state => {
   return {
     products: state.products,
+    isAdmin: state.user.isAdmin,
     user: state.user
   }
 }
@@ -83,6 +93,7 @@ const mapState = state => {
 const mapDispatch = dispatch => {
   return {
     getProducts: () => dispatch(fetchProducts()),
+    deleteProduct: id => dispatch(deleteProduct(id)),
     add: (id, obj) => dispatch(addToCart(id, obj))
   }
 }

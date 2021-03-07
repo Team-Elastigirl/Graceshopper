@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
+import CartItem from './CartItem'
 import {removeFromCart, getCart} from '../store/cart'
 
 /**
@@ -9,7 +10,7 @@ import {removeFromCart, getCart} from '../store/cart'
 export class Cart extends React.Component {
   constructor(props) {
     super(props)
-    this.removeItem = this.removeItem.bind(this)
+
     this.generateCart = this.generateCart.bind(this)
   }
 
@@ -18,11 +19,7 @@ export class Cart extends React.Component {
     console.log('props on the cart', this.props)
     await this.props.getCart(userId)
   }
-
-  removeItem(itemId) {
-    console.log(`Item #${itemId} REMOVED`)
-    this.props.remove(itemId)
-  }
+  
   // combines booking and product obj
   generateCart() {
     return this.props.cart.map(item => {
@@ -41,28 +38,31 @@ export class Cart extends React.Component {
       <div>
         <h2>Cart Items</h2>
         <div>
-          {cart.length
-            ? cart.map(item => {
-                return (
-                  <div key={`cartItem-${item.id}`}>
-                    <h3>{item.name}</h3>
-                    <img
-                      src={item.imageUrl}
-                      allt={item.name}
-                      style={{width: '400px'}}
-                    />
-                    <p>Price: {item.price}</p>
-                    <p>Quantity: {item.quantity}</p>
-                    <p>Subtotal: {item.unitPrice}</p>
-                    <p>Location: {item.location}</p>
-                    <p>{item.description}</p>
-                    <button onClick={() => this.removeItem(item.id)}>
-                      Remove From Cart
-                    </button>
-                  </div>
-                )
-              })
-            : null}
+          {cart.addedItems.map(item => {
+            return <CartItem key={item.id} cartItem={item} />
+          })}
+//           {cart.length
+//             ? cart.map(item => {
+//                 return (
+//                   <div key={`cartItem-${item.id}`}>
+//                     <h3>{item.name}</h3>
+//                     <img
+//                       src={item.imageUrl}
+//                       allt={item.name}
+//                       style={{width: '400px'}}
+//                     />
+//                     <p>Price: {item.price}</p>
+//                     <p>Quantity: {item.quantity}</p>
+//                     <p>Subtotal: {item.unitPrice}</p>
+//                     <p>Location: {item.location}</p>
+//                     <p>{item.description}</p>
+//                     <button onClick={() => this.removeItem(item.id)}>
+//                       Remove From Cart
+//                     </button>
+//                   </div>
+//                 )
+//               })
+//             : null}
         </div>
         <h3>Subtotal: {cart.subtotal}</h3>
         <Link to="/checkout">
@@ -72,7 +72,6 @@ export class Cart extends React.Component {
     )
   }
 }
-
 const mapState = state => {
   return {
     cart: state.cart,
@@ -81,9 +80,9 @@ const mapState = state => {
   }
 }
 
+
 const mapDispatch = dispatch => {
   return {
-    remove: id => dispatch(removeFromCart(id)),
     getCart: id => dispatch(getCart(id))
   }
 }
