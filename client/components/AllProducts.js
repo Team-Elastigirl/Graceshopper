@@ -1,7 +1,8 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
-import {addToCart, fetchProducts} from '../store/products'
+import {fetchProducts} from '../store/products'
+import {addToCart} from '../store/cart'
 
 /**
  * COMPONENT
@@ -9,17 +10,17 @@ import {addToCart, fetchProducts} from '../store/products'
 export class AllProducts extends React.Component {
   constructor(props) {
     super(props)
-    //this.state = store.getState();
     this.handleClick = this.handleClick.bind(this)
   }
 
   componentDidMount() {
-    // console.log(this.props)
+    console.log('in the products', this.props)
     this.props.getProducts()
   }
 
-  handleClick(id) {
-    this.props.addToCart(id)
+  handleClick(id, quantity, unitPrice, userId) {
+    console.log(this.props.add)
+    this.props.add(id, {quantity, unitPrice, userId})
   }
 
   render() {
@@ -46,7 +47,12 @@ export class AllProducts extends React.Component {
                   type="button"
                   className="add-to-cart"
                   onClick={() => {
-                    this.handleClick(product.id)
+                    this.handleClick(
+                      product.id,
+                      product.quantity,
+                      product.price,
+                      this.props.user.id
+                    )
                   }}
                 >
                   Add to Cart
@@ -69,14 +75,15 @@ export class AllProducts extends React.Component {
 
 const mapState = state => {
   return {
-    products: state.products
+    products: state.products,
+    user: state.user
   }
 }
 
 const mapDispatch = dispatch => {
   return {
     getProducts: () => dispatch(fetchProducts()),
-    addToCart: id => dispatch(addToCart(id))
+    add: (id, obj) => dispatch(addToCart(id, obj))
   }
 }
 

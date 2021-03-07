@@ -1,10 +1,17 @@
 import axios from 'axios'
 
 //ACTION TYPE
+const GET_CART = 'GET_CART'
 const ADD_TO_CART = 'ADD_TO_CART'
 const REMOVE_FROM_CART = 'REMOVE_FROM_CART'
 
 //ACTION CREATORS
+
+export const gotCart = cart => ({
+  type: GET_CART,
+  cart
+})
+
 export const addedToCart = product => ({
   type: ADD_TO_CART,
   product
@@ -16,19 +23,21 @@ export const removedFromCart = productId => ({
   productId
 })
 
-//THUNK CREATOR args: userId, quantity added
-export const addToCart = id => {
-  return async dispatch => {
-    try {
-      console.log(`Adding Product #${id} to cart`)
-      const {data: product} = await axios.post(`api/cart/${id}`, {
-        quantityAdded
-      })
-      // dispatch(addedToCart(test, quantityAdded))
-      dispatch(addedToCart(product))
-    } catch (err) {
-      console.log('Error adding to cart.', err)
-    }
+//THUNK CREATOR args: productId, quantity , unitPrice, userId
+export const addToCart = (
+  id,
+  {quantity, unitPrice, userId}
+) => async dispatch => {
+  try {
+    console.log(`Adding Product #${id} to cart`)
+    const {data: product} = await axios.post(`api/cart/add/${id}`, {
+      quantity: quantity,
+      unitPrice: unitPrice,
+      userId: userId
+    })
+    return dispatch(addedToCart(product))
+  } catch (err) {
+    console.log('Error adding to cart.', err)
   }
 }
 
@@ -44,37 +53,67 @@ export const removeFromCart = id => {
   }
 }
 
-//INITIAL STATE
-const initialState = {
-  addedItems: [
-    {
-      id: 1,
-      name: 'Orion',
-      description:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima, ex.',
-      price: 100,
-      quantity: 10,
-      imageUrl:
-        'https://cdn.britannica.com/09/91709-050-FC3BB387/Sky-view-constellation-Orion.jpg',
-      location: 'space'
-    },
-    {
-      id: 2,
-      name: 'Little Dipper',
-      description:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima, ex.',
-      price: 50,
-      quantity: 5,
-      imageUrl:
-        'http://www.wikihow.com/images/b/be/Find-the-Little-Dipper-Step-7.jpg',
-      location: 'space'
+export const getCart = id => {
+  const url = id ? `api/cart?userId=${id}` : `api/cart`
+  return async dispatch => {
+    try {
+      const cart = await axios.get(url)
+      console.log('cart reducer', cart)
+      dispatch(gotCart(cart.data))
+    } catch (err) {
+      console.log('Error getting the cart', err)
     }
-  ],
-  subtotal: 1250
+  }
+}
+
+//INITIAL STATE
+// const initialState = {
+//   addedItems: [
+//     {
+//       id: 1,
+//       name: 'Orion',
+//       description:
+//         'Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima, ex.',
+//       price: 100,
+//       quantity: 10,
+//       imageUrl:
+//         'https://cdn.britannica.com/09/91709-050-FC3BB387/Sky-view-constellation-Orion.jpg',
+//       location: 'space'
+//     },
+//     {
+//       id: 2,
+//       name: 'Little Dipper',
+//       description:
+//         'Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima, ex.',
+//       price: 50,
+//       quantity: 5,
+//       imageUrl:
+//         'http://www.wikihow.com/images/b/be/Find-the-Little-Dipper-Step-7.jpg',
+//       location: 'space'
+//     }
+//   ],
+//   subtotal: 1250
+// }
+// Reducer
+
+const initialState = []
+
+const cartReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case GET_CART: {
+      return [...state, ...action.cart]
+    }
+    case ADD_TO_CART: {
+      return [...state, action.product]
+    }
+    default: {
+      return state
+    }
+  }
 }
 
 //REDUCER
-const cartReducer = (state = initialState, action) => {
+const cart2Reducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_TO_CART:
       let existed_item = state.addedItems.find(
