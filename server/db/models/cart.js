@@ -1,8 +1,8 @@
 module.exports = function Cart(initItems) {
   //it gets the old if one exsist if not it creates an empty object
   this.items = initItems || {}
-  this.totalQty = initItems.totalQty || 0
-  this.totalPrice = initItems.totalPrice || 0
+  // this.totalQty = initItems.totalQty ||0;
+  // this.totalPrice = initItems.totalPrice ||0;
 
   // if (this.items) {
   //     for (let key in this.items) {
@@ -15,16 +15,18 @@ module.exports = function Cart(initItems) {
   this.add = function(item, id) {
     let storedItem = this.items[id]
     if (!storedItem) {
-      storedItem = this.items[id] = {qty: 0, item: item, price: 0}
+      storedItem = this.items[id] = item
     }
-    // inceases the price
-    storedItem.qty++
-    storedItem.price = storedItem.item.price * storedItem.qty
-    this.totalQty++
-    this.totalPrice += storedItem.item.price
+    // TODO: update existing items in cart
+    // storedItem.qty++;
+    // storedItem.price = storedItem.item.price * storedItem.qty;
+    // this.totalQty++;
+    // this.totalPrice += storedItem.item.price;
   }
 
-  this.update = function(item, id) {}
+  // this.update = function(item, id){
+
+  // }
 
   // helper function that returns the cart items as an array
   this.generateArray = function() {
