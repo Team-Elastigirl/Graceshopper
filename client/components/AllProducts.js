@@ -77,8 +77,7 @@ export class AllProducts extends React.Component {
 const mapState = state => {
   return {
     products: state.products,
-    isAdmin: true
-    // isAdmin: state.user.isAdmin
+    isAdmin: state.user.isAdmin
   }
 }
 

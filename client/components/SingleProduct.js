@@ -38,8 +38,7 @@ export class SingleProduct extends React.Component {
 const mapState = state => {
   return {
     singleProduct: state.singleProduct,
-    isAdmin: false
-    // isAdmin: state.user.isAdmin
+    isAdmin: state.user.isAdmin
   }
 }
 

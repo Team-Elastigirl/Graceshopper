@@ -22,8 +22,7 @@ export const UserHome = props => {
 const mapState = state => {
   return {
     email: state.user.email,
-    isAdmin: true
-    // isAdmin: state.user.isAdmin
+    isAdmin: state.user.isAdmin
   }
 }
 
