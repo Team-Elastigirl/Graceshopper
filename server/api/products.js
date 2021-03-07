@@ -17,7 +17,6 @@ const adminsOnly = (req, res, next) => {
 router.get('/', async (req, res, next) => {
   try {
     const products = await Product.findAll()
-    //console.log(products)
     res.json(products)
   } catch (err) {
     console.log('error thrown')
