@@ -10,24 +10,80 @@ async function seed() {
   await db.sync({force: true})
   console.log('db synced!')
 
-  const users = []
   const products = []
   const orders = []
   const bookings = []
 
   // Users
-  for (let i = 0; i < 20; i++) {
-    users.push({
-      username: faker.internet.userName(),
-      email: faker.internet.email(),
-      password: faker.internet.password(),
+  const users = [
+    {
+      username: 'Adomas',
+      email: 'adomas@gmail.com',
+      password: '123456',
       isAdmin: true
-    })
-  }
+    },
+    {
+      username: 'Lillian',
+      email: 'lillypad@gmail.com',
+      password: 'abcde',
+      isAdmin: true
+    },
+    {
+      username: 'Sanchit',
+      email: 'sanchit@gmail.com',
+      password: 'cats',
+      isAdmin: true
+    },
+    {
+      username: 'Samara',
+      email: 'samara@gmail.com',
+      password: 'sammas',
+      isAdmin: true
+    },
+    {
+      username: 'Natalie',
+      email: 'nat@gmail.com',
+      password: 'lane'
+    },
+    {
+      username: 'Celine',
+      email: 'celine@gmail.com',
+      password: 'sky'
+    },
+    {
+      username: 'Cody',
+      email: 'cody@gmail.com',
+      password: 'puglife'
+    },
+    {
+      username: 'Orion',
+      email: 'orion@gmail.com',
+      password: 'belt'
+    },
+    {
+      username: 'Julia',
+      email: 'julia@gmail.com',
+      password: 'likesCake'
+    },
+    {
+      username: 'Danielle',
+      email: 'dan@gmail.com',
+      password: 'elle'
+    }
+  ]
+  // for (let i = 0; i < 20; i++) {
+  //   users.push({
+  //     username: faker.internet.userName(),
+  //     email: faker.internet.email(),
+  //     password: faker.internet.password(),
+  //     isAdmin: true
+  //   })
+  // }
 
   const userInstances = await User.bulkCreate(users)
   console.log(`seeded ${users.length} users`)
-  // console.log('USER 1', userInstances[0])
+
+  // // console.log('USER 1', userInstances[0])
 
   // Products
   for (let i = 0; i < 20; i++) {
@@ -44,37 +100,36 @@ async function seed() {
 
   const productInstances = await Product.bulkCreate(products)
   console.log(`seeded ${products.length} products`)
-
-  // COMMENTED OUT FOR CONFLICTS
-
-  // // Orders
-  // for (let i = 0; i < 20; i++) {
-  //   orders.push({
-  //     orderStatus: faker.lorem.word(),
-  //     subtotal: i*1000+1,
-  //     userId: i+1
-  //   })
-  // }
-
-  // const orderInstances = await Order.bulkCreate(orders)
-  // console.log(`seeded ${orders.length} orders`)
-
-  // // Bookings
-  // for (let i = 0; i < 20; i++) {
-  //   let prodID = i+1
-  //   let orderID = i%15+1
-
-  //   bookings.push({
-  //     productId: prodID,
-  //     orderId: orderID,
-  //     unitPrice: i*100+1,
-  //     quantity: i*10+1
-  //   })
-  // }
-
-  // const bookingInstances = await Booking.bulkCreate(bookings)
-  // console.log(`seeded ${bookings.length} bookings`)
 }
+// COMMENTED OUT FOR CONFLICTS
+
+// // Orders
+// for (let i = 0; i < 20; i++) {
+//   orders.push({
+//     orderStatus: faker.lorem.word(),
+//     subtotal: i*1000+1,
+//     userId: i+1
+//   })
+// }
+
+// const orderInstances = await Order.bulkCreate(orders)
+// console.log(`seeded ${orders.length} orders`)
+
+// // Bookings
+// for (let i = 0; i < 20; i++) {
+//   let prodID = i+1
+//   let orderID = i%15+1
+
+//   bookings.push({
+//     productId: prodID,
+//     orderId: orderID,
+//     unitPrice: i*100+1,
+//     quantity: i*10+1
+//   })
+// }
+
+// const bookingInstances = await Booking.bulkCreate(bookings)
+// console.log(`seeded ${bookings.length} bookings`)
 
 // We've separated the `seed` function from the `runSeed` function.
 // This way we can isolate the error handling and exit trapping.
