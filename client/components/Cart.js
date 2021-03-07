@@ -19,7 +19,7 @@ export class Cart extends React.Component {
     console.log('props on the cart', this.props)
     await this.props.getCart(userId)
   }
-  
+
   // combines booking and product obj
   generateCart() {
     return this.props.cart.map(item => {
@@ -38,33 +38,11 @@ export class Cart extends React.Component {
       <div>
         <h2>Cart Items</h2>
         <div>
-          {cart.addedItems.map(item => {
+          {cart.map(item => {
             return <CartItem key={item.id} cartItem={item} />
           })}
-//           {cart.length
-//             ? cart.map(item => {
-//                 return (
-//                   <div key={`cartItem-${item.id}`}>
-//                     <h3>{item.name}</h3>
-//                     <img
-//                       src={item.imageUrl}
-//                       allt={item.name}
-//                       style={{width: '400px'}}
-//                     />
-//                     <p>Price: {item.price}</p>
-//                     <p>Quantity: {item.quantity}</p>
-//                     <p>Subtotal: {item.unitPrice}</p>
-//                     <p>Location: {item.location}</p>
-//                     <p>{item.description}</p>
-//                     <button onClick={() => this.removeItem(item.id)}>
-//                       Remove From Cart
-//                     </button>
-//                   </div>
-//                 )
-//               })
-//             : null}
         </div>
-        <h3>Subtotal: {cart.subtotal}</h3>
+        <h3>Subtotal: 100</h3>
         <Link to="/checkout">
           <button>CHECKOUT</button>
         </Link>
@@ -79,7 +57,6 @@ const mapState = state => {
     user: state.user
   }
 }
-
 
 const mapDispatch = dispatch => {
   return {
