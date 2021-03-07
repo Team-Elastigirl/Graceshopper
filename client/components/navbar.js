@@ -6,13 +6,22 @@ import {logout} from '../store'
 
 const Navbar = ({handleClick, isLoggedIn}) => (
   <div>
-    <h1>Star Hopper</h1>
     <nav>
       {isLoggedIn ? (
         <div>
           {/* The navbar will show these links after you log in */}
-          <Link to="/home">Home</Link>
-          <Link to="/products">Products</Link>
+          <a>
+            <img src="rocket.png" alt="rocketlogo" style={{width: '50px'}} />
+          </a>
+          <a>
+            <h1>Star Hopper</h1>
+          </a>
+          <a>
+            <Link to="/home">Home</Link>
+          </a>
+          <a>
+            <Link to="/products">Products</Link>
+          </a>
           <a href="#" onClick={handleClick}>
             Logout
           </a>
@@ -20,13 +29,29 @@ const Navbar = ({handleClick, isLoggedIn}) => (
       ) : (
         <div>
           {/* The navbar will show these links before you log in */}
-          <Link to="/products">Products</Link>
-          <Link to="/login">Login</Link>
-          <Link to="/signup">Sign Up</Link>
+          <a>
+            <img src="rocket.png" alt="rocketlogo" style={{width: '50px'}} />
+          </a>
+          <a>
+            <h1>Star Hopper</h1>
+          </a>
+          <a>
+            <Link to="/products">Products</Link>
+          </a>
+          <a>
+            {' '}
+            <Link to="/login">Login</Link>
+          </a>
+          <a>
+            {' '}
+            <Link to="/signup">Sign Up</Link>
+          </a>
         </div>
       )}
       <div>
-        <Link to="/cart">Cart</Link>
+        <a>
+          <Link to="/cart">Cart</Link>
+        </a>
       </div>
     </nav>
     <hr />
