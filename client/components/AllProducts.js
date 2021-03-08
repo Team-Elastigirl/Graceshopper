@@ -19,8 +19,8 @@ export class AllProducts extends React.Component {
     this.props.getProducts()
   }
 
-  handleClick(id, quantity, unitPrice, userId) {
-    this.props.add(id, {quantity, unitPrice, userId})
+  handleClick(product, userId) {
+    this.props.add(product, userId)
     //console.log(this.props)
   }
 
@@ -47,12 +47,7 @@ export class AllProducts extends React.Component {
                   type="button"
                   className="add-to-cart"
                   onClick={() => {
-                    this.handleClick(
-                      product.id,
-                      product.quantity,
-                      product.price,
-                      this.props.user.id
-                    )
+                    this.handleClick(product, this.props.user.id)
                   }}
                 >
                   Add to Cart
@@ -60,7 +55,10 @@ export class AllProducts extends React.Component {
                 <p>Description: {product.description}</p>
                 <p>{product.disclaimer}</p>
                 {this.props.isAdmin ? (
-                  <button onClick={() => this.props.deleteProduct(product.id)}>
+                  <button
+                    onClick={() => this.props.deleteProduct(product.id)}
+                    type="submit"
+                  >
                     Delete Product
                   </button>
                 ) : (

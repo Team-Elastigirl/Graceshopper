@@ -15,9 +15,9 @@ export class SingleProduct extends React.Component {
     this.props.getSingleProduct(this.props.match.params.productId)
   }
 
-  handleClick(id, quantity, unitPrice, userId) {
+  handleClick(product, userId) {
     //console.log(this.props.add)
-    this.props.add(id, {quantity, unitPrice, userId})
+    this.props.add(product, userId)
     // console.log('in clickhandle')
   }
 
@@ -39,12 +39,7 @@ export class SingleProduct extends React.Component {
             type="button"
             className="add-to-cart"
             onClick={() => {
-              this.handleClick(
-                singleProduct.id,
-                singleProduct.quantity,
-                singleProduct.price,
-                this.props.user.id
-              )
+              this.handleClick(singleProduct, this.props.user.id)
             }}
           >
             Add to Cart
