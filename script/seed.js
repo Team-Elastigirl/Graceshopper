@@ -7,12 +7,11 @@ const {Order, Booking} = require('../server/db/models')
 const faker = require('faker')
 
 async function seed() {
-  await db.sync({force: true})
+  await db.sync()
   console.log('db synced!')
 
-  const products = []
-  const orders = []
   const bookings = []
+  const orders = []
 
   // Users
   const users = [
@@ -71,6 +70,46 @@ async function seed() {
       password: 'elle'
     }
   ]
+
+  const products = [
+    {
+      name: 'Orion, the Hunter',
+      quantity: 10,
+      price: 7000,
+      description:
+        'Take a seven star trip across the legendary hunter’s outline. Warm up with an active weekend visiting Orion’s head and learn more about the history of this legendary myth. Next amp with an active visit to the stars of Orion’s sword and learn intergalactic sword skills - both historical and contemporary techniques. Finally complete your active trip across Orion with three jammed-packed days on Orion’s Belt exploring meteor debris, star hiking, space games, and completing your active adventure with a relaxing feast fit for a hunter.',
+      imageUrl:
+        'https://images.unsplash.com/photo-1586234491813-2a87fb06abea?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2046&q=80',
+      location: '{NQ1 +85°}',
+      disclaimer:
+        'Star Hopper holds no responsibility or liability for lost property, damage, bodily harm, trips extending beyond planned trip duration up to but not excluding additional 10 years of travel time, or collection of lost properties or bodies.'
+    },
+    {
+      name: 'Sagittarius, the Archer',
+      quantity: 10,
+      price: 12000,
+      description:
+        'This twelve-star zodiac package is all about exploration! Take time to practice space walking off of the archer’s knee by the star Rukbat. Learn about long-range photography by tackling the constellation’s brightest star: Epsilon Sagittarii. As we pass the ‘teapot’s spout’ enjoy the proximity to the Milky Way and explore the splendid views of the Large Sagittarius Star Cloud. The star of the Sagittarius package is a day spent observing a supermassive black hole at the center of the galaxy while relaxing on our top-notch space deck rotatable for 360° galaxy views.',
+      imageUrl:
+        'https://images.unsplash.com/photo-1541185934-01b600ea069c?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxzZWFyY2h8NXx8c3BhY2V4fGVufDB8MHwwfA%3D%3D&auto=format&fit=crop&w=500&q=60',
+      location: '{SQ4 +55°}',
+      disclaimer:
+        'Star Hopper holds no responsibility or liability for lost property, damage, bodily harm, trips extending beyond planned trip duration up to but not excluding additional 10 years of travel time, or collection of lost properties or bodies.'
+    },
+    {
+      name: 'Taurus, the Bull',
+      quantity: 10,
+      price: 30000,
+      description:
+        'Take a trip across the oldest named constellation, Taurus. With historical roots that date back to the Bronze Age, and written records to the 2nd Century CE, Taurus is a great trip for families and history buffs alike. We will start our trip at Alderbaran, a large red star situated at the fork of bull’s horns. Here you will take some time to learn about this constellation’s mythological associations and may be lucky to experience meteor showers. (The Taurids peak in November, while the Beta Taurids can be seen in June and July.) As we make our way around the bull’s outline, this trip offers an amazing view of the Pleidas star cluster.  In addition to star viewing,this twelve day trip offers many in-ship activities including and not limited to spacecar racing, space rock climbing and space helium ice cream making classes.',
+      imageUrl:
+        'https://www.saltwire.com/media/photologue/photos/cache/30122019-AC-GlenRoberts-Column-AtlanticSkies_large.jpg',
+      location: '{NQ1 +90°}',
+      disclaimer:
+        'Star Hopper holds no responsibility or liability for lost property, damage, bodily harm, trips extending beyond planned trip duration up to but not excluding additional 10 years of travel time, or collection of lost properties or bodies.'
+    }
+  ]
+
   // for (let i = 0; i < 20; i++) {
   //   users.push({
   //     username: faker.internet.userName(),
@@ -86,17 +125,17 @@ async function seed() {
   // // console.log('USER 1', userInstances[0])
 
   // Products
-  for (let i = 0; i < 20; i++) {
-    products.push({
-      name: faker.lorem.word(),
-      quanity: faker.random.number(),
-      price: i * 100 + 1,
-      description: faker.commerce.productDescription(),
-      imageUrl: faker.image.nature(),
-      location: faker.address.nearbyGPSCoordinate(),
-      disclaimer: faker.lorem.sentence()
-    })
-  }
+  // for (let i = 0; i < 20; i++) {
+  //   products.push({
+  //     name: faker.lorem.word(),
+  //     quanity: faker.random.number(),
+  //     price: i * 100 + 1,
+  //     description: faker.commerce.productDescription(),
+  //     imageUrl: faker.image.nature(),
+  //     location: faker.address.nearbyGPSCoordinate(),
+  //     disclaimer: faker.lorem.sentence(),
+  //   })
+  // }
 
   const productInstances = await Product.bulkCreate(products)
   console.log(`seeded ${products.length} products`)

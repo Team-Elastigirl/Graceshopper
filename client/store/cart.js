@@ -41,11 +41,11 @@ export const addToCart = (
   }
 }
 
-export const removeFromCart = id => {
+export const removeFromCart = (id, orderId) => {
   return async dispatch => {
     try {
       console.log('REMOVE FROM CART THUNK')
-      await axios.delete(`api/cart/${id}`)
+      await axios.delete(`api/cart/${id}/${orderId}`)
       dispatch(removedFromCart(id))
     } catch (err) {
       console.log('Error removing from cart.', err)
@@ -101,10 +101,13 @@ const initialState = []
 const cartReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_CART: {
-      return [...state, ...action.cart]
+      return [...action.cart]
     }
     case ADD_TO_CART: {
       return [...state, action.product]
+    }
+    case REMOVE_FROM_CART: {
+      return state.filter(product => product.id !== action.productId)
     }
     default: {
       return state
@@ -113,56 +116,56 @@ const cartReducer = (state = initialState, action) => {
 }
 
 //REDUCER
-const cart2Reducer = (state = initialState, action) => {
-  switch (action.type) {
-    case ADD_TO_CART:
-      let existed_item = state.addedItems.find(
-        item => action.product.id === item.id
-      )
+// const cart2Reducer = (state = initialState, action) => {
+//   switch (action.type) {
+//     case ADD_TO_CART:
+//       let existed_item = state.addedItems.find(
+//         item => action.product.id === item.id
+//       )
 
-      // add total product price to subtotal
-      // let newTotal = state.subtotal + action.product.price*action.quantityAdded
-      let newTotal = state.subtotal + action.product.price // only add 1 at a time
+//       // add total product price to subtotal
+//       // let newTotal = state.subtotal + action.product.price*action.quantityAdded
+//       let newTotal = state.subtotal + action.product.price // only add 1 at a time
 
-      // add quantity to existing item
-      if (existed_item) {
-        // finds existing item and adds quantity
-        return {
-          ...state,
-          addedItems: state.addedItems.map(item => {
-            if (item.id === action.product.id) item.quantity++
-            // item.quantity += action.quantityAdded
-          }),
-          subtotal: newTotal
-        }
-      } else {
-        // add new item to cart
-        // adds new product with quantity added by user
-        // let addProduct = {...action.product, quantity: action.quantityAdded}
-        let addProduct = {...action.product, quantity: 1}
-        console.log('ADDED PRODUCT', action.product)
-        return {
-          ...state,
-          addedItems: [...state.addedItems].push(addProduct),
-          subtotal: newTotal
-        }
-      }
-    case REMOVE_FROM_CART:
-      let removedItem = state.addedItems.find(
-        item => action.productId === item.id
-      )
-      let removeFromTotal =
-        state.subtotal - removedItem.quantity * removedItem.price
-      return {
-        ...state,
-        addedItems: state.addedItems.filter(
-          item => item.id !== action.productId
-        ),
-        subtotal: removeFromTotal
-      }
-    default:
-      return state
-  }
-}
+//       // add quantity to existing item
+//       if (existed_item) {
+//         // finds existing item and adds quantity
+//         return {
+//           ...state,
+//           addedItems: state.addedItems.map(item => {
+//             if (item.id === action.product.id) item.quantity++
+//             // item.quantity += action.quantityAdded
+//           }),
+//           subtotal: newTotal
+//         }
+//       } else {
+//         // add new item to cart
+//         // adds new product with quantity added by user
+//         // let addProduct = {...action.product, quantity: action.quantityAdded}
+//         let addProduct = {...action.product, quantity: 1}
+//         console.log('ADDED PRODUCT', action.product)
+//         return {
+//           ...state,
+//           addedItems: [...state.addedItems].push(addProduct),
+//           subtotal: newTotal
+//         }
+//       }
+//     case REMOVE_FROM_CART:
+//       let removedItem = state.addedItems.find(
+//         item => action.productId === item.id
+//       )
+//       let removeFromTotal =
+//         state.subtotal - removedItem.quantity * removedItem.price
+//       return {
+//         ...state,
+//         addedItems: state.addedItems.filter(
+//           item => item.id !== action.productId
+//         ),
+//         subtotal: removeFromTotal
+//       }
+//     default:
+//       return state
+//   }
+// }
 
 export default cartReducer
