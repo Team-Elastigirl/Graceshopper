@@ -5,16 +5,18 @@ module.exports = router
 
 //securing routes
 const adminsOnly = (req, res, next) => {
-  if (!req.user.isAdmin) {
+  if (req.user && req.user.isAdmin) {
+    next()
+  } else {
     const err = new Error('Stop, in the name of law')
     err.status = 401
     return next(err)
   }
-  next()
 }
 
 // GET api/products
 router.get('/', async (req, res, next) => {
+  console.log('what is this?', this)
   try {
     const products = await Product.findAll()
     res.json(products)
