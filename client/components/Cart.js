@@ -32,13 +32,19 @@ export class Cart extends React.Component {
 
   render() {
     const cart = this.props.cartObj.cart
-    //console.log('CART76', productsInCart)
+    console.log('cart props', this.props)
     return (
       <div>
         <h2>Cart Items</h2>
         <div>
           {cart.map(item => {
-            return <CartItem key={item.id} cartItem={item} />
+            return (
+              <CartItem
+                key={item.id}
+                cartItem={item}
+                orderId={this.props.cartObj.orderId}
+              />
+            )
           })}
         </div>
         <h3>Subtotal: 100</h3>
