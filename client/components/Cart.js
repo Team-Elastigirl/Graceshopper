@@ -12,7 +12,7 @@ export class Cart extends React.Component {
   //   super(props)
 
   // this.generateCart = this.generateCart.bind(this)
-  //}
+  // }
 
   async componentDidMount() {
     const userId = this.props.user ? this.props.user.id : null
@@ -31,8 +31,7 @@ export class Cart extends React.Component {
   // }
 
   render() {
-    const cart = this.props.cart
-    //const productsInCart = this.generateCart()
+    const cart = this.props.cartObj.cart
     //console.log('CART76', productsInCart)
     return (
       <div>
@@ -52,7 +51,7 @@ export class Cart extends React.Component {
 }
 const mapState = state => {
   return {
-    cart: state.cart,
+    cartObj: state.cart,
     products: state.products,
     user: state.user
   }

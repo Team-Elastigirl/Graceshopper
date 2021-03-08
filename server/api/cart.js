@@ -10,7 +10,6 @@ router.get('/', async (req, res, next) => {
     console.log('inside the req', req.session.cart)
     return res.send(req.session.cart)
   }
-  console.log('query', req.query.userId)
   // if user find in db
   // api/cart?userId=123
   try {
@@ -18,7 +17,6 @@ router.get('/', async (req, res, next) => {
     const order = await Order.findOne({
       where: {userId: parseInt(req.query.userId, 1), orderStatus: 'in cart'}
     })
-    console.log('found order', order)
     // find all items/products part of this order
     if (order) {
       const bookings = await Booking.findAll({where: {orderId: order.id}})
@@ -73,8 +71,7 @@ router.put('/:productId', async (req, res, next) => {
 router.post('/add/:productId', async (req, res, next) => {
   const productId = req.params.productId
   const {quantity, unitPrice, userId} = req.body
-  console.log('req.body', req.body)
-  if (userId) {
+  if (userId > 0) {
     // a user is found
     try {
       const tempOrder = await Order.findOrCreate({
@@ -88,7 +85,6 @@ router.post('/add/:productId', async (req, res, next) => {
         }
       })
       const orderId = tempOrder[0].dataValues.id
-      console.log('orderId---->', orderId)
       // TODO: if a booking exists just update that booking instead creating a new booking
       const booking = await Booking.create({
         orderId,
@@ -112,7 +108,6 @@ router.post('/add/:productId', async (req, res, next) => {
 
     cart.add(foundProduct, productId)
     req.session.cart = cart.generateArray()
-    console.log('session here--->', req.session.cart)
     res.json(foundProduct)
   } catch (error) {
     next(error)
