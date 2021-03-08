@@ -2,17 +2,17 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 import CartItem from './CartItem'
-import {removeFromCart, getCart} from '../store/cart'
+import {getCart} from '../store/cart'
 
 /**
  * COMPONENT
  */
 export class Cart extends React.Component {
-  constructor(props) {
-    super(props)
+  // constructor(props) {
+  //   super(props)
 
-    this.generateCart = this.generateCart.bind(this)
-  }
+  // this.generateCart = this.generateCart.bind(this)
+  //}
 
   async componentDidMount() {
     const userId = this.props.user ? this.props.user.id : null
@@ -21,19 +21,19 @@ export class Cart extends React.Component {
   }
 
   // combines booking and product obj
-  generateCart() {
-    return this.props.cart.map(item => {
-      const product = this.props.products.find(
-        elem => item.productId === elem.id
-      )
-      return {...product, ...item}
-    })
-  }
+  // generateCart() {
+  //   return this.props.cart.map(item => {
+  //     const product = this.props.products.find(
+  //       elem => item.productId === elem.id
+  //     )
+  //     return {...product, ...item}
+  //   })
+  // }
 
   render() {
     const cart = this.props.cart
-    const productsInCart = this.generateCart()
-    console.log('CART76', productsInCart)
+    //const productsInCart = this.generateCart()
+    //console.log('CART76', productsInCart)
     return (
       <div>
         <h2>Cart Items</h2>
