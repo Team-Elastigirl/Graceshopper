@@ -60,10 +60,11 @@ export class Checkout extends React.Component {
           <p>Contact Information</p>
           <label htmlFor="email">Email:</label>
           <input name="email" onChange={this.handleChange} value={email} />
-
-          <button type="submit" disabled={disable}>
-            Submit
-          </button>
+          <div>
+            <Link to="/confirmation">
+              <button type="submit">Submit</button>
+            </Link>
+          </div>
         </form>
       </div>
     )
