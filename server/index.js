@@ -63,6 +63,15 @@ const createApp = () => {
   app.use(passport.initialize())
   app.use(passport.session())
 
+  // const adminsOnly = (req, res, next) => {
+  //   if (!req.user.isAdmin) {
+  //     const err = new Error('Stop, in the name of law')
+  //     err.status = 401
+  //     return next(err)
+  //   }
+  //   next()
+  // }
+
   // auth and api routes
   app.use('/auth', require('./auth'))
   app.use('/api', require('./api'))
