@@ -8,12 +8,22 @@ module.exports = function Cart(initItems) {
     if (!storedItem) {
       storedItem = this.items[id] = item
     }
+
     // TODO: update existing items in cart
     // storedItem.qty++;
     // storedItem.price = storedItem.item.price * storedItem.qty;
     // this.totalQty++;
     // this.totalPrice += storedItem.item.price;
   }
+
+  this.remove = function(id) {
+    console.log('BEFORE items', this.items)
+    this.items.splice(0, 1)
+    console.log('AFTER items', this.items)
+  }
+
+  // this.update = function(item, id){
+
 
   // }
 
