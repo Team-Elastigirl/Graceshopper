@@ -5,7 +5,6 @@ import {fetchProducts, deleteProduct} from '../store/products'
 import AddProduct from './AddProduct'
 import {addToCart} from '../store/cart'
 
-
 /**
  * COMPONENT
  */
@@ -16,13 +15,13 @@ export class AllProducts extends React.Component {
   }
 
   componentDidMount() {
-    console.log('in the products', this.props)
+    //console.log('in the products', this.props)
     this.props.getProducts()
   }
 
   handleClick(id, quantity, unitPrice, userId) {
-    console.log(this.props.add)
     this.props.add(id, {quantity, unitPrice, userId})
+    //console.log(this.props)
   }
 
   render() {
