@@ -7,7 +7,7 @@ const {Order, Booking} = require('../server/db/models')
 const faker = require('faker')
 
 async function seed() {
-  await db.sync()
+  await db.sync({force: true})
   console.log('db synced!')
 
   const bookings = []
