@@ -71,6 +71,7 @@ router.put('/:productId', async (req, res, next) => {
 router.post('/add/:productId', async (req, res, next) => {
   const productId = req.params.productId
   const {quantity, unitPrice, userId} = req.body
+  console.log('USER ID', typeof userId, userId)
   if (userId > 0) {
     // a user is found
     try {
@@ -118,8 +119,15 @@ router.delete('/:productId/:orderId', async (req, res, next) => {
   try {
     const {productId, orderId} = req.params
     console.log('req.params', req.params)
-
-    if (orderId !== 1) {
+    if (orderId > 0) {
+      await Booking.destroy({
+        where: {
+          orderId: orderId,
+          productId: productId
+        }
+      })
+      res.json('Deleted')
+    } else {
       let cart = new Cart(req.session.cart ? req.session.cart : {})
 
       cart.remove(productId)
@@ -127,7 +135,6 @@ router.delete('/:productId/:orderId', async (req, res, next) => {
 
       res.json(cart)
     }
-
   } catch (error) {
     next(error)
   }

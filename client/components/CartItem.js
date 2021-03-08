@@ -45,7 +45,9 @@ export class CartItem extends React.Component {
 
   removeItem(itemId) {
     console.log(`Item #${itemId} REMOVED`)
-    this.props.remove(itemId, null)
+    const orderId = this.props.orderId || 0
+    console.log('remove orderId', orderId)
+    this.props.remove(itemId, orderId)
   }
 
   render() {
