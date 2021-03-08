@@ -21,6 +21,7 @@ const Navbar = ({handleClick, isLoggedIn}) => (
           <a href="#" onClick={handleClick}>
             Logout
           </a>
+          <Link to="/cart">Cart</Link>
         </div>
       ) : (
         <div>
@@ -32,15 +33,14 @@ const Navbar = ({handleClick, isLoggedIn}) => (
             <h1>Star Hopper</h1>
           </a>
           <Link to="/products">Products</Link>
-
           <Link to="/login">Login</Link>
-
           <Link to="/signup">Sign Up</Link>
+          <Link to="/cart">Cart</Link>
         </div>
       )}
-      <div>
+      {/* <div className="cartNav">
         <Link to="/cart">Cart</Link>
-      </div>
+      </div> */}
     </nav>
     <hr />
   </div>
