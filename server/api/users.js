@@ -7,6 +7,7 @@ const adminsOnly = (req, res, next) => {
     next()
   } else {
     const err = new Error('Stop, in the name of law')
+    res.redirect('/')
     err.status = 401
     return next(err)
   }
