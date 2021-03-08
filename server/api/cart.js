@@ -113,7 +113,26 @@ router.post('/add/:productId', async (req, res, next) => {
     cart.add(foundProduct, productId)
     req.session.cart = cart.generateArray()
     console.log('session here--->', req.session.cart)
-    res.json(foundProduct)
+    console.log('foundProduct', foundProduct.dataValues)
+    res.json(foundProduct.dataValues)
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.delete('/:productId/:orderId', async (req, res, next) => {
+  try {
+    const {productId, orderId} = req.params
+    console.log('req.params', req.params)
+
+    if (orderId !== 1) {
+      let cart = new Cart(req.session.cart ? req.session.cart : {})
+
+      cart.remove(productId)
+      req.session.cart = cart.generateArray()
+
+      res.json(cart)
+    }
   } catch (error) {
     next(error)
   }

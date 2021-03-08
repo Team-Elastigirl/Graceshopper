@@ -39,7 +39,7 @@ export class CartItem extends React.Component {
 
   removeItem(itemId) {
     console.log(`Item #${itemId} REMOVED`)
-    this.props.remove(itemId)
+    this.props.remove(itemId, null)
   }
 
   render() {
@@ -67,7 +67,7 @@ const mapState = state => {
 
 const mapDispatch = dispatch => {
   return {
-    remove: id => dispatch(removeFromCart(id))
+    remove: (productId, orderId) => dispatch(removeFromCart(productId, orderId))
   }
 }
 
