@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-// import {Link} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import {fetchSingleProduct} from '../store/singleProduct'
 import EditProduct from './EditProduct'
 import {addToCart} from '../store/cart'
@@ -11,20 +11,19 @@ export class SingleProduct extends React.Component {
     this.handleClick = this.handleClick.bind(this)
   }
   componentDidMount() {
-    console.log('in didMount')
+    //  console.log('in didMount')
     this.props.getSingleProduct(this.props.match.params.productId)
   }
 
-  handleClick(id, quantity, unitPrice, userId) {
+  handleClick(product, userId) {
     //console.log(this.props.add)
-    console.log('in clickhandle')
-    this.props.add(id, {quantity, unitPrice, userId})
+    this.props.add(product, userId)
+    // console.log('in clickhandle')
   }
 
   render() {
     const singleProduct = this.props.singleProduct
-    //not getting props
-    console.log(singleProduct, 'single product')
+
     return (
       <div>
         <h1>{singleProduct.name}</h1>
@@ -40,12 +39,7 @@ export class SingleProduct extends React.Component {
             type="button"
             className="add-to-cart"
             onClick={() => {
-              this.handleClick(
-                singleProduct.id,
-                singleProduct.quantity,
-                singleProduct.price,
-                this.props.user.id
-              )
+              this.handleClick(singleProduct, this.props.user.id)
             }}
           >
             Add to Cart
@@ -64,7 +58,7 @@ export class SingleProduct extends React.Component {
 }
 
 const mapState = state => {
-  console.log('in mapState')
+  //console.log('in mapState')
   return {
     singleProduct: state.singleProduct,
     isAdmin: state.user.isAdmin,
@@ -73,7 +67,7 @@ const mapState = state => {
 }
 
 const mapDispatch = dispatch => {
-  console.log('in dispatch')
+  // console.log('in dispatch')
   return {
     getSingleProduct: productId => dispatch(fetchSingleProduct(productId)),
     add: (id, obj) => dispatch(addToCart(id, obj))

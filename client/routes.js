@@ -27,6 +27,15 @@ class Routes extends Component {
   render() {
     const {isLoggedIn} = this.props
 
+    const adminsOnly = (req, res, next) => {
+      if (!req.user.isAdmin) {
+        const err = new Error('Stop, in the name of law')
+        err.status = 401
+        return next(err)
+      }
+      next()
+    }
+
     return (
       <Switch>
         {/* Routes placed here are available to all visitors */}

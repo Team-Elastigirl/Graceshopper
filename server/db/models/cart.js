@@ -1,15 +1,6 @@
 module.exports = function Cart(initItems) {
   //it gets the old if one exsist if not it creates an empty object
   this.items = initItems || {}
-  // this.totalQty = initItems.totalQty ||0;
-  // this.totalPrice = initItems.totalPrice ||0;
-
-  // if (this.items) {
-  //     for (let key in this.items) {
-  //         this.totalQty += this.items[key].qty;
-  //         this.totalPrice += this.items[key].qty * this.items[key].item.price;
-  //     }
-  // }
 
   // adds a new item to the cart and checks if the item already is in the cart
   this.add = function(item, id) {
@@ -32,6 +23,7 @@ module.exports = function Cart(initItems) {
   }
 
   // this.update = function(item, id){
+
 
   // }
 
