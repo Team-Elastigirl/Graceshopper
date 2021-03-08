@@ -30,7 +30,7 @@ export class CartItem extends React.Component {
       this.props.cartItem.quantity &&
       this.state.quantity < this.props.cartItem.quantity
     ) {
-      console.log('this in cartitem', this.props.cartItem.quantity)
+      // console.log('this in cartitem', this.props.cartItem)
       this.setState({
         quantity: this.state.quantity + 1
       })
@@ -54,7 +54,7 @@ export class CartItem extends React.Component {
       <div>
         <h3>{item.name}</h3>
         <img src={item.imageUrl} allt={item.name} style={{width: '400px'}} />
-        <p>Price: {item.price * this.state.quantity}</p>
+        <p>Price: ${item.price * this.state.quantity}</p>
         <p>Location: {item.location}</p>
         <button onClick={this.decrease}>-</button>
         <span>{this.state.quantity}</span>
