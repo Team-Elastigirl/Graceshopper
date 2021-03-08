@@ -32,7 +32,6 @@ export class Cart extends React.Component {
 
   render() {
     const cart = this.props.cartObj.cart
-    console.log('cart props', this.props)
     return (
       <div>
         <h2>Cart Items</h2>
@@ -47,7 +46,11 @@ export class Cart extends React.Component {
             )
           })}
         </div>
-        <h3>Subtotal: 100</h3>
+        <h3>
+          Subtotal: ${cart.reduce((accum, item) => {
+            return accum + item.price * 10
+          }, 0)}
+        </h3>
         <Link to="/checkout">
           <button>CHECKOUT</button>
         </Link>
