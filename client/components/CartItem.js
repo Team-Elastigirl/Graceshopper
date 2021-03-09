@@ -10,7 +10,7 @@ export class CartItem extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      quantity: 0
+      amount: 0
     }
     this.removeItem = this.removeItem.bind(this)
     this.decrease = this.decrease.bind(this)
@@ -18,28 +18,25 @@ export class CartItem extends React.Component {
   }
 
   decrease() {
-    if (this.state.quantity > 0) {
+    if (this.state.amount > 0) {
       this.setState({
-        quantity: this.state.quantity - 1
+        amount: this.state.amount - 1
       })
     }
   }
 
   increase() {
-    if (
-      this.props.cartItem.quantity &&
-      this.state.quantity < this.props.cartItem.quantity
-    ) {
+    if (this.state.amount < this.props.cartItem.quantity) {
       // console.log('this in cartitem', this.props.cartItem)
       this.setState({
-        quantity: this.state.quantity + 1
+        amount: this.state.amount + 1
       })
     }
   }
 
   componentDidMount() {
     this.setState({
-      quantity: this.props.cartItem.quantity
+      amount: this.props.cartItem.amount
     })
   }
 
@@ -52,10 +49,12 @@ export class CartItem extends React.Component {
 
   render() {
     const item = this.props.cartItem
+
     console.log('props in cart items', this.props)
     return (
       <div className="single_item">
         <h3>{item.name}</h3>
+
         <img
           className="constellation"
           src={item.imageUrl}
@@ -74,6 +73,13 @@ export class CartItem extends React.Component {
           +
         </button>
         <button onClick={() => this.removeItem(item.id)} type="submit">
+        <img src={item.imageUrl} allt={item.name} style={{width: '400px'}} />
+        <p>Price: ${item.price * this.state.amount}</p>
+        <p>Location: {item.location}</p>
+        <button onClick={this.decrease}>-</button>
+        <span>{this.state.amount}</span>
+        <button onClick={this.increase}>+</button>
+        <button onClick={() => this.removeItem(item.id)}>
           Remove From Cart
         </button>
       </div>

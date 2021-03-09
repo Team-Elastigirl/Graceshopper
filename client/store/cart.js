@@ -14,9 +14,10 @@ export const gotCart = cart => ({
   cart
 })
 
-export const addedToCart = (product, orderId) => ({
+export const addedToCart = (product, amount, orderId) => ({
   type: ADD_TO_CART,
   product,
+  amount,
   orderId
   // quantityAdded
 })
@@ -43,7 +44,14 @@ export const addToCart = (product, userId) => async dispatch => {
         userId: userId ? userId : 0
       }
     )
+
     return dispatch(addedToCart(product, foundProduct.id))
+
+    console.log('amount', foundProduct.amount)
+    return dispatch(
+      addedToCart(product, foundProduct.amount, foundProduct.orderId)
+    )
+
   } catch (err) {
     console.log('Error adding to cart.', err)
   }
@@ -53,7 +61,8 @@ export const removeFromCart = (id, orderId) => {
   return async dispatch => {
     try {
       console.log('REMOVE FROM CART THUNK')
-      await axios.delete(`/api/cart/${id}/${orderId}`)
+      const cart = await axios.delete(`api/cart/${id}/${orderId}`)
+      console.log('CART', cart)
       dispatch(removedFromCart(id))
     } catch (err) {
       console.log('Error removing from cart.', err)
@@ -89,8 +98,11 @@ const cartReducer = (state = initialState, action) => {
       }
     }
     case ADD_TO_CART: {
+      console.log('AMOUNT', action.amount)
+      const newItem = {...action.product, amount: action.amount}
+      console.log('NEW ITEM', newItem)
       return {
-        cart: [...state.cart, action.product],
+        cart: [...state.cart, newItem],
         orderId: action.orderId
       }
     }

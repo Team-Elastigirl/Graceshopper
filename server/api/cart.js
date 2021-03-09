@@ -69,7 +69,7 @@ router.put('/:orderId/:productId', async (req, res, next) => {
 router.post('/add/:productId', async (req, res, next) => {
   const productId = req.params.productId
   const {quantity, unitPrice, userId} = req.body
-  console.log('USER ID', typeof userId, userId)
+  // console.log('USER ID', typeof userId, userId)
   if (userId > 0) {
     // a user is found
     try {
@@ -85,6 +85,7 @@ router.post('/add/:productId', async (req, res, next) => {
       })
       const orderId = tempOrder[0].dataValues.id
 
+
       const booking = await Booking.findOrCreate({
         where: {
           orderId,
@@ -94,6 +95,8 @@ router.post('/add/:productId', async (req, res, next) => {
           quantity: 1,
           unitPrice: unitPrice * quantity
         }
+
+      
       })
       const foundProduct = await Product.findByPk(productId)
       console.log('', foundProduct)
@@ -107,15 +110,18 @@ router.post('/add/:productId', async (req, res, next) => {
   }
   //if guest posts guest's items on a cart in session store.
   try {
-    let cart = new Cart(req.session.cart ? req.session.cart : {})
+    // console.log('CART', req.session.cart)
+
+    let cart = new Cart(req.session.cart ? req.session.cart : [])
     const foundProduct = await Product.findByPk(productId)
     if (!foundProduct) {
       res.redirect('/')
     }
     // console.log('in the cart route guest', foundProduct)
 
-    cart.add(foundProduct, productId)
+    const addedItem = cart.add(foundProduct)
     req.session.cart = cart.generateArray()
+
     const newQuantity = foundProduct.decreaseQuantity(1)
     await foundProduct.update({quantity: newQuantity})
     res.json(foundProduct)
@@ -127,7 +133,7 @@ router.post('/add/:productId', async (req, res, next) => {
 router.delete('/:productId/:orderId', async (req, res, next) => {
   try {
     const {productId, orderId} = req.params
-    console.log('req.params', req.params)
+    // console.log('req.params', req.params)
     if (orderId > 0) {
       await Booking.destroy({
         where: {
