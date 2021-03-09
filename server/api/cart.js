@@ -6,7 +6,7 @@ module.exports = router
 // GET api/cart
 router.get('/', async (req, res, next) => {
   //if guest send the cart on session
-  if (req.query.userId > 0) {
+  if (!req.query.userId) {
     console.log('inside the req', req.session.cart)
     return res.send(req.session.cart)
   }
