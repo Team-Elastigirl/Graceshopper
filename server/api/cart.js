@@ -6,7 +6,8 @@ module.exports = router
 // GET api/cart
 router.get('/', async (req, res, next) => {
   //if guest send the cart on session
-  if (!req.query.userId) {
+  if (req.query.userId > 0) {
+    console.log('inside the req', req.session.cart)
     return res.send(req.session.cart)
   }
   // if user find in db
@@ -30,18 +31,19 @@ router.get('/', async (req, res, next) => {
 
 // PUT api/cart/:productId modifies the order of the cart
 // TODO: adjusts logic for session
-router.put('/:orderId/:productId', async (req, res, next) => {
+router.put('/:productId', async (req, res, next) => {
   // req.body. needs updated quanity and unit price
-  const {orderId, productId} = req.params
+  const productId = req.params.productId
   const {quantity, unitPrice, userId} = req.body
   if (userId) {
     try {
-      const foundBooking = await Booking.findOne({
+      const tempOrder = await Order.findOne({
         where: {
-          orderId,
-          productId
+          userId: req.body.userId
         }
       })
+      const orderId = tempOrder[0].id
+      const foundBooking = await Booking.findOne({where: {orderId, productId}})
       if (!quantity >= 1) {
         foundBooking.destroy()
       }
@@ -80,29 +82,17 @@ router.post('/add/:productId', async (req, res, next) => {
         },
         defaults: {
           orderDate: new Date(),
-          subtotal: unitPrice * quantity
+          subtotal: unitPrice
         }
       })
       const orderId = tempOrder[0].dataValues.id
-
-
-      const booking = await Booking.findOrCreate({
-        where: {
-          orderId,
-          productId
-        },
-        defaults: {
-          quantity: 1,
-          unitPrice: unitPrice * quantity
-        }
-
-      
+      // TODO: if a booking exists just update that booking instead creating a new booking
+      const booking = await Booking.create({
+        orderId,
+        productId,
+        amount: 1,
+        unitPrice
       })
-      const foundProduct = await Product.findByPk(productId)
-      console.log('', foundProduct)
-      const count = await foundProduct.decreaseQuantity(1)
-      await foundProduct.update({quantity: count})
-
       return res.json(booking)
     } catch (error) {
       console.log('err', error)
@@ -121,10 +111,7 @@ router.post('/add/:productId', async (req, res, next) => {
 
     const addedItem = cart.add(foundProduct)
     req.session.cart = cart.generateArray()
-
-    const newQuantity = foundProduct.decreaseQuantity(1)
-    await foundProduct.update({quantity: newQuantity})
-    res.json(foundProduct)
+    res.json(addedItem)
   } catch (error) {
     next(error)
   }
