@@ -20,16 +20,6 @@ export class Cart extends React.Component {
     await this.props.getCart(userId)
   }
 
-  // combines booking and product obj
-  // generateCart() {
-  //   return this.props.cart.map(item => {
-  //     const product = this.props.products.find(
-  //       elem => item.productId === elem.id
-  //     )
-  //     return {...product, ...item}
-  //   })
-  // }
-
   render() {
     const cart = this.props.cartObj.cart
     return (
