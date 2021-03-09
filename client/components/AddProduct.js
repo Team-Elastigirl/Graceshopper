@@ -1,7 +1,5 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {Link} from 'react-router-dom'
-import PropTypes from 'prop-types'
 import {postProduct} from '../store/products'
 
 export class AddProduct extends React.Component {

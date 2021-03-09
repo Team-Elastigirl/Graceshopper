@@ -44,14 +44,9 @@ export const addToCart = (product, userId) => async dispatch => {
         userId: userId ? userId : 0
       }
     )
-
-    return dispatch(addedToCart(product, foundProduct.id))
-
-    console.log('amount', foundProduct.amount)
     return dispatch(
       addedToCart(product, foundProduct.amount, foundProduct.orderId)
     )
-
   } catch (err) {
     console.log('Error adding to cart.', err)
   }

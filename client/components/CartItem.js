@@ -49,46 +49,31 @@ export class CartItem extends React.Component {
 
   render() {
     const item = this.props.cartItem
-
-    console.log('props in cart items', this.props)
     return (
       <div className="single_item">
         <h3>{item.name}</h3>
-
         <img
           className="constellation"
           src={item.imageUrl}
           allt={item.name}
           style={{width: '400px'}}
         />
-        <p>Price: ${item.price}</p>
-        <p>Quantity: ${item.quantity}</p>
+        <p>Price: ${item.price * this.state.amount}</p>
         <p>Location: {item.location}</p>
         <> </>
         <button onClick={this.decrease} type="submit">
           -
         </button>
-        <span>{this.state.quantity}</span>
+        <span>{this.state.amount}</span>
         <button onClick={this.increase} type="submit">
           +
         </button>
         <button onClick={() => this.removeItem(item.id)} type="submit">
-        <img src={item.imageUrl} allt={item.name} style={{width: '400px'}} />
-        <p>Price: ${item.price * this.state.amount}</p>
-        <p>Location: {item.location}</p>
-        <button onClick={this.decrease}>-</button>
-        <span>{this.state.amount}</span>
-        <button onClick={this.increase}>+</button>
-        <button onClick={() => this.removeItem(item.id)}>
           Remove From Cart
         </button>
       </div>
     )
   }
-}
-
-const mapState = state => {
-  return {}
 }
 
 const mapDispatch = dispatch => {
@@ -97,4 +82,4 @@ const mapDispatch = dispatch => {
   }
 }
 
-export default connect(mapState, mapDispatch)(CartItem)
+export default connect(null, mapDispatch)(CartItem)
