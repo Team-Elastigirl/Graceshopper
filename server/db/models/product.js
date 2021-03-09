@@ -37,9 +37,8 @@ const Product = db.define('product', {
   }
 })
 
-
 Product.prototype.decreaseQuantity = function(num) {
-  if (num < this.quantity) {
+  if (this.quantity === 0) {
     return new Error('Sorry No More Trips Avaliable')
   } else {
     this.quantity = this.quantity - num

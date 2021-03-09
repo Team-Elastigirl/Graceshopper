@@ -49,11 +49,30 @@ export class CartItem extends React.Component {
 
   render() {
     const item = this.props.cartItem
-    console.log('THIS.STATE', this.state)
-    console.log('THIS.PROPS', this.props)
+
+    console.log('props in cart items', this.props)
     return (
-      <div>
+      <div className="single_item">
         <h3>{item.name}</h3>
+
+        <img
+          className="constellation"
+          src={item.imageUrl}
+          allt={item.name}
+          style={{width: '400px'}}
+        />
+        <p>Price: ${item.price}</p>
+        <p>Quantity: ${item.quantity}</p>
+        <p>Location: {item.location}</p>
+        <> </>
+        <button onClick={this.decrease} type="submit">
+          -
+        </button>
+        <span>{this.state.quantity}</span>
+        <button onClick={this.increase} type="submit">
+          +
+        </button>
+        <button onClick={() => this.removeItem(item.id)} type="submit">
         <img src={item.imageUrl} allt={item.name} style={{width: '400px'}} />
         <p>Price: ${item.price * this.state.amount}</p>
         <p>Location: {item.location}</p>

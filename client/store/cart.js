@@ -5,6 +5,7 @@ import axios from 'axios'
 const GET_CART = 'GET_CART'
 const ADD_TO_CART = 'ADD_TO_CART'
 const REMOVE_FROM_CART = 'REMOVE_FROM_CART'
+const UPDATE_CART = 'UPDATE_CART '
 
 //ACTION CREATORS
 
@@ -26,22 +27,31 @@ export const removedFromCart = productId => ({
   productId
 })
 
+export const updatedCart = productId => ({
+  type: UPDATE_CART,
+  productId
+})
+
 //THUNK CREATOR args: productId, quantity , unitPrice, userId
 export const addToCart = (product, userId) => async dispatch => {
   try {
     console.log(`Adding Product #${product.id} to cart`)
     const {data: foundProduct} = await axios.post(
-      `api/cart/add/${product.id}`,
+      `/api/cart/add/${product.id}`,
       {
         quantity: product.quantity,
         unitPrice: product.price,
         userId: userId ? userId : 0
       }
     )
+
+    return dispatch(addedToCart(product, foundProduct.id))
+
     console.log('amount', foundProduct.amount)
     return dispatch(
       addedToCart(product, foundProduct.amount, foundProduct.orderId)
     )
+
   } catch (err) {
     console.log('Error adding to cart.', err)
   }
@@ -61,11 +71,10 @@ export const removeFromCart = (id, orderId) => {
 }
 
 export const getCart = id => {
-  const url = id ? `api/cart?userId=${id}` : `api/cart`
+  const url = id ? `/api/cart?userId=${id}` : `api/cart`
   return async dispatch => {
     try {
       const cart = await axios.get(url)
-      console.log('cart reducer', cart)
       dispatch(gotCart(cart.data))
     } catch (err) {
       console.log('Error getting the cart', err)
