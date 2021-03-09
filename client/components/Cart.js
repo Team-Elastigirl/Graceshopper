@@ -8,10 +8,27 @@ import {getCart} from '../store/cart'
  * COMPONENT
  */
 export class Cart extends React.Component {
+  // constructor(props) {
+  //   super(props)
+
+  // this.generateCart = this.generateCart.bind(this)
+  // }
+
   async componentDidMount() {
     const userId = this.props.user ? this.props.user.id : null
+    console.log('props on the cart', this.props)
     await this.props.getCart(userId)
   }
+
+  // combines booking and product obj
+  // generateCart() {
+  //   return this.props.cart.map(item => {
+  //     const product = this.props.products.find(
+  //       elem => item.productId === elem.id
+  //     )
+  //     return {...product, ...item}
+  //   })
+  // }
 
   render() {
     const cart = this.props.cartObj.cart
@@ -29,15 +46,13 @@ export class Cart extends React.Component {
             )
           })}
         </div>
-        <h3 className="totals">
-          Total Items : {cart.length}
-          <br />
+        <h3>
           Subtotal: ${cart.reduce((accum, item) => {
             return accum + item.price * item.amount
           }, 0)}
         </h3>
         <Link to="/checkout">
-          <button type="submit">CHECKOUT</button>
+          <button>CHECKOUT</button>
         </Link>
       </div>
     )
