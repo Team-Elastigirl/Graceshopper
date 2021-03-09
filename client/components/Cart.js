@@ -48,7 +48,7 @@ export class Cart extends React.Component {
         </div>
         <h3>
           Subtotal: ${cart.reduce((accum, item) => {
-            return accum + item.price * 10
+            return accum + item.price * item.amount
           }, 0)}
         </h3>
         <Link to="/checkout">

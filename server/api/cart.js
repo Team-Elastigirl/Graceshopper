@@ -71,7 +71,7 @@ router.put('/:productId', async (req, res, next) => {
 router.post('/add/:productId', async (req, res, next) => {
   const productId = req.params.productId
   const {quantity, unitPrice, userId} = req.body
-  console.log('USER ID', typeof userId, userId)
+  // console.log('USER ID', typeof userId, userId)
   if (userId > 0) {
     // a user is found
     try {
@@ -90,7 +90,7 @@ router.post('/add/:productId', async (req, res, next) => {
       const booking = await Booking.create({
         orderId,
         productId,
-        quantity,
+        amount: 1,
         unitPrice
       })
       return res.json(booking)
@@ -100,16 +100,18 @@ router.post('/add/:productId', async (req, res, next) => {
   }
   //if guest posts guest's items on a cart in session store.
   try {
-    let cart = new Cart(req.session.cart ? req.session.cart : {})
+    // console.log('CART', req.session.cart)
+
+    let cart = new Cart(req.session.cart ? req.session.cart : [])
     const foundProduct = await Product.findByPk(productId)
     if (!foundProduct) {
       res.redirect('/')
     }
     // console.log('in the cart route guest', foundProduct)
 
-    cart.add(foundProduct, productId)
+    const addedItem = cart.add(foundProduct)
     req.session.cart = cart.generateArray()
-    res.json(foundProduct)
+    res.json(addedItem)
   } catch (error) {
     next(error)
   }
@@ -118,7 +120,7 @@ router.post('/add/:productId', async (req, res, next) => {
 router.delete('/:productId/:orderId', async (req, res, next) => {
   try {
     const {productId, orderId} = req.params
-    console.log('req.params', req.params)
+    // console.log('req.params', req.params)
     if (orderId > 0) {
       await Booking.destroy({
         where: {
