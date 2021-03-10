@@ -13,6 +13,14 @@ export const UserHome = props => {
     <div>
       <h3>Welcome, {email}</h3>
       {isAdmin ? <AllUsers /> : ''}
+      <div className="profile-product">
+        <h3>Profile</h3>
+        <p>Your profile will be displayed here!</p>
+      </div>
+      <div className="profile-product">
+        <h3>Order History</h3>
+        <p>You have no orders at this time. Book your first trip now!</p>
+      </div>
     </div>
   )
 }

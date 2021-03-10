@@ -57,6 +57,10 @@ button:hover {
   background-color: rgb(93, 98, 102);
 }
 
+.profile-product:hover {
+  background-color: #df5960;
+}
+
 .products {
   display: flex;
   flex-flow: row wrap;
@@ -65,6 +69,19 @@ button:hover {
 }
 
 .solo-product {
+  padding: 1em;
+  margin: 1em;
+  border-radius: 4px;
+  text-align: left;
+
+  background-color: rgb(21, 22, 27);
+  color: #ffffff;
+  flex: 0 0 1em;
+  width: 425px;
+  align-items: left;
+}
+
+.profile-product {
   padding: 1em;
   margin: 1em;
   border-radius: 4px;
