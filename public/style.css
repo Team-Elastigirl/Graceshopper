@@ -93,3 +93,7 @@ button:hover {
   width: 425px;
   align-items: left;
 }
+
+.add-to-cart:focus {
+  background-color: rgb(28, 26, 145);
+}
