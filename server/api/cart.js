@@ -12,7 +12,11 @@ router.get('/:userId', async (req, res, next) => {
   if (!req.session.passport) {
     // if (req.params.userId === 'undefined' || req.params.userId === 0) {
     console.log('inside the req', req.session.cart)
-    const cartObj = {cart: req.session.cart, orderId: 0}
+    let cartObj
+    if (!req.session.cart) {
+      console.log('EMPTY CART')
+      cartObj = {cart: [], orderId: 0}
+    } else cartObj = {cart: req.session.cart, orderId: 0}
     console.log('cartObj', cartObj)
 
     res.send(cartObj)
@@ -30,7 +34,7 @@ router.get('/:userId', async (req, res, next) => {
           orderStatus: 'in cart'
         }
       })
-      if (!order) cartObj = {}
+      if (!order) cartObj = {cart: [], orderId: 0}
       else {
         console.log('get Orderid', order.dataValues.id)
         cartObj = {cart: req.session.cart, orderId: order.dataValues.id}

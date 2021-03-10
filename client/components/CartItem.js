@@ -18,7 +18,8 @@ export class CartItem extends React.Component {
   }
 
   decrease(productId) {
-    if (this.state.amount > 0) {
+    if (this.state.amount === 1) this.removeItem(productId)
+    else if (this.state.amount > 0) {
       const decremented = this.state.amount - 1
       this.setState({
         amount: decremented
