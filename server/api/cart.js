@@ -1,17 +1,14 @@
 const router = require('express').Router()
-//ensure model name matches new db
 const {Product, Booking, Order, User, Cart} = require('../db/models')
 module.exports = router
 
 // GET api/cart
 router.get('/', async (req, res, next) => {
-  //if guest send the cart on session
+  //if guest sends the cart on session
   if (!req.query.userId) {
-    console.log('inside the req', req.session.cart)
-    return res.send(req.session.cart)
+    return res.send(req.session.cart).status(200)
   }
-  // if user find in db
-  // api/cart?userId=123
+  // if user found in db
   try {
     // find an order with matching userId and status = in the cart
     const order = await Order.findOne({
@@ -20,17 +17,17 @@ router.get('/', async (req, res, next) => {
     // find all items/products part of this order
     if (order) {
       const bookings = await Booking.findAll({where: {orderId: order.id}})
-      res.json(bookings)
+      res.json(bookings).status(200)
     } else {
-      res.json({})
+      res.json({}).status(200)
     }
   } catch (err) {
-    console.log('err in api/cart', err)
+    console.log('err in api/cart', err).status(401)
+    next(err)
   }
 })
 
 // PUT api/cart/:productId modifies the order of the cart
-// TODO: adjusts logic for session
 router.put('/:productId', async (req, res, next) => {
   // req.body. needs updated quanity and unit price
   const productId = req.params.productId
@@ -48,7 +45,7 @@ router.put('/:productId', async (req, res, next) => {
         foundBooking.destroy()
       }
       const updatedBooking = foundBooking.update({unitPrice, quantity})
-      res.json(updatedBooking)
+      res.json(updatedBooking).status(200)
     } catch (error) {
       console.log('err', error)
     }
@@ -56,22 +53,19 @@ router.put('/:productId', async (req, res, next) => {
   let cart = new Cart(req.session.cart ? req.session.cart : {})
   const foundProduct = await Product.findByPk(productId)
   if (!foundProduct) {
-    res.redirect('/')
+    res.redirect('/').status(307)
   }
   cart.add(foundProduct, foundProduct.id)
   req.session.cart = cart
-  // console.log('session', req.session.cart)
-  res.redirect('/')
+  res.redirect('/').status(307)
 })
 
 // Post api/cart/add/:productId
 //makes a booking for an item if an order exists.
 //If an order does not exist, make one and add a booking.
-
 router.post('/add/:productId', async (req, res, next) => {
   const productId = req.params.productId
   const {quantity, unitPrice, userId} = req.body
-  // console.log('USER ID', typeof userId, userId)
   if (userId > 0) {
     // a user is found
     try {
@@ -86,32 +80,28 @@ router.post('/add/:productId', async (req, res, next) => {
         }
       })
       const orderId = tempOrder[0].dataValues.id
-      // TODO: if a booking exists just update that booking instead creating a new booking
+      // WISHLIST TODO: if a booking exists just update that booking instead creating a new booking
       const booking = await Booking.create({
         orderId,
         productId,
         amount: 1,
         unitPrice
       })
-      return res.json(booking)
+      return res.json(booking).status(201)
     } catch (error) {
       console.log('err', error)
     }
   }
   //if guest posts guest's items on a cart in session store.
   try {
-    // console.log('CART', req.session.cart)
-
     let cart = new Cart(req.session.cart ? req.session.cart : [])
     const foundProduct = await Product.findByPk(productId)
     if (!foundProduct) {
-      res.redirect('/')
+      res.redirect('/').status(307)
     }
-    // console.log('in the cart route guest', foundProduct)
-
     const addedItem = cart.add(foundProduct)
     req.session.cart = cart.generateArray()
-    res.json(addedItem)
+    res.json(addedItem).status(202)
   } catch (error) {
     next(error)
   }
@@ -120,7 +110,6 @@ router.post('/add/:productId', async (req, res, next) => {
 router.delete('/:productId/:orderId', async (req, res, next) => {
   try {
     const {productId, orderId} = req.params
-    // console.log('req.params', req.params)
     if (orderId > 0) {
       await Booking.destroy({
         where: {
@@ -128,14 +117,12 @@ router.delete('/:productId/:orderId', async (req, res, next) => {
           productId: productId
         }
       })
-      res.json('Deleted')
+      res.json('Deleted').status(204)
     } else {
       let cart = new Cart(req.session.cart ? req.session.cart : {})
-
       cart.remove(productId)
       req.session.cart = cart.generateArray()
-
-      res.json(cart)
+      res.json(cart).status(200)
     }
   } catch (error) {
     next(error)
