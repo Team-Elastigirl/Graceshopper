@@ -15,8 +15,8 @@ export class Cart extends React.Component {
   // }
 
   async componentDidMount() {
-    const userId = this.props.user ? this.props.user.id : null
-    console.log('props on the cart', this.props)
+    const userId = this.props.user ? this.props.user.id : 0
+
     await this.props.getCart(userId)
   }
 
