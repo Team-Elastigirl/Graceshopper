@@ -46,16 +46,13 @@ export class CartItem extends React.Component {
   }
 
   removeItem(itemId) {
-    console.log(`Item #${itemId} REMOVED`)
     const orderId = this.props.orderId || 0
-    console.log('remove orderId', orderId)
     this.props.remove(itemId, orderId)
   }
 
   render() {
     const item = this.props.cartItem
-    console.log('THIS.STATE', this.state)
-    console.log('THIS.PROPS', this.props)
+
     return (
       <div>
         <h3>{item.name}</h3>

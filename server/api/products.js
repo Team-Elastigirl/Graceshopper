@@ -16,7 +16,6 @@ const adminsOnly = (req, res, next) => {
 
 // GET api/products
 router.get('/', async (req, res, next) => {
-  console.log('what is this?', this)
   try {
     const products = await Product.findAll()
     res.json(products)

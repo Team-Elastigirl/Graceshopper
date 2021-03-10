@@ -36,7 +36,6 @@ export const updatedAmount = (productId, amount) => ({
 //THUNK CREATOR args: productId, quantity , unitPrice, userId
 export const addToCart = (product, userId) => async dispatch => {
   try {
-    console.log(`Adding Product #${product.id} to cart`)
     const {data: foundProduct} = await axios.post(
       `/api/cart/add/${product.id}`,
       {
@@ -45,7 +44,6 @@ export const addToCart = (product, userId) => async dispatch => {
         userId: userId ? userId : 0
       }
     )
-    console.log('amount', foundProduct.amount)
     return dispatch(
       addedToCart(product, foundProduct.amount, foundProduct.orderId)
     )
@@ -68,7 +66,6 @@ export const removeFromCart = (id, orderId) => {
 export const updateAmount = (productId, amount, orderId) => {
   return async dispatch => {
     try {
-      console.log('UPDATE THUNK props', amount, orderId)
       const {data: updated} = await axios.put(`api/cart/${productId}`, {
         amount: amount,
         orderId: orderId
@@ -81,12 +78,9 @@ export const updateAmount = (productId, amount, orderId) => {
 }
 
 export const getCart = id => {
-  // const url = id ? `api/cart?userId=${id}` : `api/cart`
   return async dispatch => {
     try {
-      console.log('get thunk userid', typeof id, id)
       const {data: cart} = await axios.get(`api/cart/${id}`)
-      console.log('GET CART cart reducer', cart)
       dispatch(gotCart(cart.cart, cart.orderId))
     } catch (err) {
       console.log('Error getting the cart', err)
@@ -110,9 +104,7 @@ const cartReducer = (state = initialState, action) => {
       }
     }
     case ADD_TO_CART: {
-      console.log('AMOUNT', action.amount)
       const newItem = {...action.product, amount: action.amount}
-      console.log('NEW ITEM', newItem)
       return {
         cart: [...state.cart, newItem],
         orderId: action.orderId
