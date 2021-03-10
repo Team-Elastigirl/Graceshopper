@@ -22,7 +22,7 @@ router.get('/', async (req, res, next) => {
       res.json({}).status(200)
     }
   } catch (err) {
-    console.log('err in api/cart', err).status(401)
+    console.log('err in api/cart', err)
     next(err)
   }
 })
