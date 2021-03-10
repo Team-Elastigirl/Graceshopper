@@ -5,6 +5,7 @@ import axios from 'axios'
 const GET_CART = 'GET_CART'
 const ADD_TO_CART = 'ADD_TO_CART'
 const REMOVE_FROM_CART = 'REMOVE_FROM_CART'
+const UPDATE_AMOUNT = 'UPDATE_AMOUNT'
 
 //ACTION CREATORS
 
@@ -24,6 +25,12 @@ export const addedToCart = (product, amount, orderId) => ({
 export const removedFromCart = productId => ({
   type: REMOVE_FROM_CART,
   productId
+})
+
+export const updatedAmount = (productId, amount) => ({
+  type: UPDATE_AMOUNT,
+  productId,
+  amount
 })
 
 //THUNK CREATOR args: productId, quantity , unitPrice, userId
@@ -50,9 +57,7 @@ export const addToCart = (product, userId) => async dispatch => {
 export const removeFromCart = (id, orderId) => {
   return async dispatch => {
     try {
-      console.log('REMOVE FROM CART THUNK')
       const cart = await axios.delete(`api/cart/${id}/${orderId}`)
-      console.log('CART', cart)
       dispatch(removedFromCart(id))
     } catch (err) {
       console.log('Error removing from cart.', err)
@@ -60,13 +65,29 @@ export const removeFromCart = (id, orderId) => {
   }
 }
 
-export const getCart = id => {
-  const url = id ? `api/cart?userId=${id}` : `api/cart`
+export const updateAmount = (productId, amount, orderId) => {
   return async dispatch => {
     try {
-      const cart = await axios.get(url)
+      console.log('UPDATE THUNK props', amount, orderId)
+      const {data: updated} = await axios.put(`api/cart/${productId}`, {
+        amount: amount,
+        orderId: orderId
+      })
+      dispatch(updatedAmount(productId, amount))
+    } catch (err) {
+      console.log('Error updating amount.', err)
+    }
+  }
+}
+
+export const getCart = id => {
+  // const url = id ? `api/cart?userId=${id}` : `api/cart`
+  return async dispatch => {
+    try {
+      console.log('get thunk userid', typeof id, id)
+      const {data: cart} = await axios.get(`api/cart/${id}`)
       console.log('GET CART cart reducer', cart)
-      dispatch(gotCart(cart.data))
+      dispatch(gotCart(cart.cart, cart.orderId))
     } catch (err) {
       console.log('Error getting the cart', err)
     }
@@ -101,6 +122,15 @@ const cartReducer = (state = initialState, action) => {
       return {
         ...state,
         cart: state.cart.filter(product => product.id !== action.productId)
+      }
+    }
+    case UPDATE_AMOUNT: {
+      return {
+        ...state,
+        cart: state.cart.map(item => {
+          if (item.id === action.productId) item.amount = action.amount
+          return item
+        })
       }
     }
     default: {

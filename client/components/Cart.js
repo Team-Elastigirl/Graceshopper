@@ -15,8 +15,10 @@ export class Cart extends React.Component {
   // }
 
   async componentDidMount() {
-    const userId = this.props.user ? this.props.user.id : null
+    const userId = this.props.user ? this.props.user.id : 0
     console.log('props on the cart', this.props)
+    console.log('Cart userid', userId)
+
     await this.props.getCart(userId)
   }
 
@@ -32,6 +34,7 @@ export class Cart extends React.Component {
 
   render() {
     const cart = this.props.cartObj.cart
+    console.log('render cart props', this.props)
     return (
       <div>
         <h2>Cart Items</h2>

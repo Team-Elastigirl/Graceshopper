@@ -28,18 +28,33 @@ module.exports = function Cart(initItems) {
     this.items.splice(idx, 1)
   }
 
+  this.updateAmount = function(id, newAmount) {
+    console.log('this.items', this.items)
+    const idx = this.items.findIndex(item => {
+      console.log(
+        'item id',
+        typeof item.id,
+        item.id,
+        'productId',
+        typeof id,
+        id
+      )
+      if (item.id === Number(id)) {
+        console.log('UPDATED ME PLEASE')
+        return true
+      }
+    })
+    console.log('IDX', idx)
+    this.items[idx].amount = newAmount
+    console.log('this.items', this.items)
+  }
+
   // this.update = function(item, id){
 
   // }
+  this.getCart = function() {
+    return this.items
+  }
 
   // helper function that returns the cart items as an array
-  this.generateArray = function() {
-    const arr = []
-    for (let item of this.items) {
-      // if (this.items[id]) {
-      arr.push(item)
-      // }
-    }
-    return arr
-  }
 }

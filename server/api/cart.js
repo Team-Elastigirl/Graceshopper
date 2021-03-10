@@ -4,28 +4,55 @@ const {Product, Booking, Order, User, Cart} = require('../db/models')
 module.exports = router
 
 // GET api/cart
-router.get('/', async (req, res, next) => {
+router.get('/:userId', async (req, res, next) => {
   //if guest send the cart on session
-  if (!req.query.userId) {
+  console.log('GET USERID', typeof req.params.userId, req.params.userId)
+  console.log('req session ', req.session)
+
+  if (!req.session.passport) {
+    // if (req.params.userId === 'undefined' || req.params.userId === 0) {
     console.log('inside the req', req.session.cart)
-    return res.send(req.session.cart)
-  }
-  // if user find in db
-  // api/cart?userId=123
-  try {
-    // find an order with matching userId and status = in the cart
-    const order = await Order.findOne({
-      where: {userId: parseInt(req.query.userId, 1), orderStatus: 'in cart'}
-    })
-    // find all items/products part of this order
-    if (order) {
-      const bookings = await Booking.findAll({where: {orderId: order.id}})
-      res.json(bookings)
-    } else {
-      res.json({})
+    const cartObj = {cart: req.session.cart, orderId: 0}
+    console.log('cartObj', cartObj)
+
+    res.send(cartObj)
+  } else {
+    // if user find in db
+    // api/cart?userId=123
+    try {
+      let cartObj
+      // find an order with matching userId and status = in the cart
+      console.log('req session user', req.session.passport.user)
+
+      const order = await Order.findOne({
+        where: {
+          userId: Number(req.session.passport.user),
+          orderStatus: 'in cart'
+        }
+      })
+      if (!order) cartObj = {}
+      else {
+        console.log('get Orderid', order.dataValues.id)
+        cartObj = {cart: req.session.cart, orderId: order.dataValues.id}
+        console.log('cartObj', cartObj)
+        // find all items/products part of this order
+        // const bookings = await Booking.findAll({where: {orderId: order.dataValues.id}})
+        // console.log('bookings', bookings)
+
+        // products = await bookings.map(async booking => {
+        //   console.log('datavalues', booking.dataValues)
+        //   const product = await Product.findByPk(booking.dataValues.productId)
+        //   console.log('product', product)
+        //   return {...product.dataValues, amount: booking.dataValues.amount}
+        // })
+        // console.log('products', products)
+        // res.json(products)
+      }
+      res.send(cartObj)
+    } catch (err) {
+      next(err)
+      console.log('err in api/cart', err)
     }
-  } catch (err) {
-    console.log('err in api/cart', err)
   }
 })
 
@@ -34,34 +61,48 @@ router.get('/', async (req, res, next) => {
 router.put('/:productId', async (req, res, next) => {
   // req.body. needs updated quanity and unit price
   const productId = req.params.productId
-  const {quantity, unitPrice, userId} = req.body
-  if (userId) {
+  const {amount, orderId} = req.body
+  console.log('put REQ.BODY', req.body)
+  if (orderId && orderId !== 0) {
+    console.log('PUT USER')
     try {
-      const tempOrder = await Order.findOne({
-        where: {
-          userId: req.body.userId
+      // const tempOrder = await Order.findOne({
+      //   where: {
+      //     userId: req.body.userId
+      //   }
+      // })
+      // const orderId = tempOrder[0].id
+      const [updatedRowCount, updatedBooking] = await Booking.update(
+        {amount},
+        {
+          where: {
+            orderId,
+            productId
+          },
+          returning: true
         }
-      })
-      const orderId = tempOrder[0].id
-      const foundBooking = await Booking.findOne({where: {orderId, productId}})
-      if (!quantity >= 1) {
-        foundBooking.destroy()
-      }
-      const updatedBooking = foundBooking.update({unitPrice, quantity})
-      res.json(updatedBooking)
+      )
+      let cart = new Cart(req.session.cart ? req.session.cart : [])
+      cart.updateAmount(productId, amount)
+      req.session.cart = cart.getCart()
+
+      res.json(updatedBooking[0])
     } catch (error) {
+      next(error)
       console.log('err', error)
     }
+  } else {
+    let cart = new Cart(req.session.cart ? req.session.cart : [])
+    // const foundProduct = await Product.findByPk(productId)
+    // if (!foundProduct) {
+    //   res.redirect('/')
+    // }
+    cart.updateAmount(productId, amount)
+    req.session.cart = cart.getCart()
+    res.json('Updated')
   }
-  let cart = new Cart(req.session.cart ? req.session.cart : {})
-  const foundProduct = await Product.findByPk(productId)
-  if (!foundProduct) {
-    res.redirect('/')
-  }
-  cart.add(foundProduct, foundProduct.id)
-  req.session.cart = cart
   // console.log('session', req.session.cart)
-  res.redirect('/')
+  // res.redirect('/')
 })
 
 // Post api/cart/add/:productId
@@ -71,7 +112,7 @@ router.put('/:productId', async (req, res, next) => {
 router.post('/add/:productId', async (req, res, next) => {
   const productId = req.params.productId
   const {quantity, unitPrice, userId} = req.body
-  // console.log('USER ID', typeof userId, userId)
+  console.log('USER ID', typeof userId, userId)
   if (userId > 0) {
     // a user is found
     try {
@@ -93,27 +134,40 @@ router.post('/add/:productId', async (req, res, next) => {
         amount: 1,
         unitPrice
       })
+      console.log('user CART', req.session.cart)
+
+      let cart = new Cart(req.session.cart ? req.session.cart : [])
+      const foundProduct = await Product.findByPk(productId)
+      if (!foundProduct) {
+        res.redirect('/')
+      }
+      // console.log('in the cart route guest', foundProduct)
+
+      const addedItem = cart.add(foundProduct)
+      req.session.cart = cart.getCart()
       return res.json(booking)
     } catch (error) {
+      next(error)
       console.log('err', error)
     }
-  }
-  //if guest posts guest's items on a cart in session store.
-  try {
-    // console.log('CART', req.session.cart)
+  } else {
+    //if guest posts guest's items on a cart in session store.
+    try {
+      console.log('guest CART', req.session.cart)
 
-    let cart = new Cart(req.session.cart ? req.session.cart : [])
-    const foundProduct = await Product.findByPk(productId)
-    if (!foundProduct) {
-      res.redirect('/')
+      let cart = new Cart(req.session.cart ? req.session.cart : [])
+      const foundProduct = await Product.findByPk(productId)
+      if (!foundProduct) {
+        res.redirect('/')
+      }
+      // console.log('in the cart route guest', foundProduct)
+
+      const addedItem = cart.add(foundProduct)
+      req.session.cart = cart.getCart()
+      res.json(addedItem)
+    } catch (error) {
+      next(error)
     }
-    // console.log('in the cart route guest', foundProduct)
-
-    const addedItem = cart.add(foundProduct)
-    req.session.cart = cart.generateArray()
-    res.json(addedItem)
-  } catch (error) {
-    next(error)
   }
 })
 
@@ -133,7 +187,7 @@ router.delete('/:productId/:orderId', async (req, res, next) => {
       let cart = new Cart(req.session.cart ? req.session.cart : {})
 
       cart.remove(productId)
-      req.session.cart = cart.generateArray()
+      req.session.cart = cart.getCart()
 
       res.json(cart)
     }

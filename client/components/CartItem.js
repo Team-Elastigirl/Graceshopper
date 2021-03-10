@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
-import {removeFromCart} from '../store/cart'
+import {removeFromCart, updateAmount} from '../store/cart'
 
 /**
  * COMPONENT
@@ -10,27 +10,31 @@ export class CartItem extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      amount: 0
+      amount: 1
     }
     this.removeItem = this.removeItem.bind(this)
     this.decrease = this.decrease.bind(this)
     this.increase = this.increase.bind(this)
   }
 
-  decrease() {
+  decrease(productId) {
     if (this.state.amount > 0) {
+      const decremented = this.state.amount - 1
       this.setState({
-        amount: this.state.amount - 1
+        amount: decremented
       })
+      this.props.update(productId, decremented, this.props.orderId)
     }
   }
 
-  increase() {
+  increase(productId) {
     if (this.state.amount < this.props.cartItem.quantity) {
-      // console.log('this in cartitem', this.props.cartItem)
+      const incremented = this.state.amount + 1
       this.setState({
-        amount: this.state.amount + 1
+        amount: incremented
       })
+
+      this.props.update(productId, incremented, this.props.orderId)
     }
   }
 
@@ -57,9 +61,9 @@ export class CartItem extends React.Component {
         <img src={item.imageUrl} allt={item.name} style={{width: '400px'}} />
         <p>Price: ${item.price * this.state.amount}</p>
         <p>Location: {item.location}</p>
-        <button onClick={this.decrease}>-</button>
+        <button onClick={() => this.decrease(item.id)}>-</button>
         <span>{this.state.amount}</span>
-        <button onClick={this.increase}>+</button>
+        <button onClick={() => this.increase(item.id)}>+</button>
         <button onClick={() => this.removeItem(item.id)}>
           Remove From Cart
         </button>
@@ -74,7 +78,10 @@ const mapState = state => {
 
 const mapDispatch = dispatch => {
   return {
-    remove: (productId, orderId) => dispatch(removeFromCart(productId, orderId))
+    remove: (productId, orderId) =>
+      dispatch(removeFromCart(productId, orderId)),
+    update: (productId, amount, orderId) =>
+      dispatch(updateAmount(productId, amount, orderId))
   }
 }
 
