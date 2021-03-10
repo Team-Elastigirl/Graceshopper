@@ -52,7 +52,9 @@ export class Cart extends React.Component {
           }, 0)}
         </h3>
         <Link to="/checkout">
-          <button>CHECKOUT</button>
+          <button type="submit" disabled={!cart.length}>
+            CHECKOUT
+          </button>
         </Link>
       </div>
     )

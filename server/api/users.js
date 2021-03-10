@@ -13,26 +13,24 @@ const adminsOnly = (req, res, next) => {
   }
 }
 
+// GET /api/users
 router.get('/', adminsOnly, async (req, res, next) => {
   try {
     const users = await User.findAll({
-      // explicitly select only the id and email fields - even though
-      // users' passwords are encrypted, it won't help if we just
-      // send everything to anyone who asks!
       attributes: ['id', 'email', 'username', 'isAdmin']
     })
-    res.json(users)
+    res.json(users).status(200)
   } catch (err) {
     next(err)
   }
 })
 
-// GET /api/:userId
+// GET /api/users/:userId
 router.get('/:userId', adminsOnly, async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.userId)
     if (!user) return res.sendStatus(404)
-    res.json(user)
+    res.json(user).status(200)
   } catch (err) {
     next(err)
   }
