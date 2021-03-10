@@ -12,7 +12,7 @@ router.post('/login', async (req, res, next) => {
       console.log('Incorrect password for user:', req.body.email)
       res.status(401).send('Wrong username and/or password')
     } else {
-      req.login(user, err => (err ? next(err) : res.json(user)))
+      req.login(user, err => (err ? next(err) : res.json(user).status(200)))
     }
   } catch (err) {
     next(err)
@@ -22,7 +22,7 @@ router.post('/login', async (req, res, next) => {
 router.post('/signup', async (req, res, next) => {
   try {
     const user = await User.create(req.body)
-    req.login(user, err => (err ? next(err) : res.json(user)))
+    req.login(user, err => (err ? next(err) : res.json(user).status(201)))
   } catch (err) {
     if (err.name === 'SequelizeUniqueConstraintError') {
       res.status(401).send('User already exists')
@@ -35,11 +35,11 @@ router.post('/signup', async (req, res, next) => {
 router.post('/logout', (req, res) => {
   req.logout()
   req.session.destroy()
-  res.redirect('/')
+  res.redirect('/').status(302)
 })
 
 router.get('/me', (req, res) => {
-  res.json(req.user)
+  res.json(req.user).status(200)
 })
 
 router.use('/google', require('./google'))

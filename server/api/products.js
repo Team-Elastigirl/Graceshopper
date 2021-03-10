@@ -1,9 +1,8 @@
 const router = require('express').Router()
-//ensure model name matches new db
 const {Product} = require('../db/models')
 module.exports = router
 
-//securing routes
+//Secures routes
 const adminsOnly = (req, res, next) => {
   if (req.user && req.user.isAdmin) {
     next()
@@ -18,7 +17,7 @@ const adminsOnly = (req, res, next) => {
 router.get('/', async (req, res, next) => {
   try {
     const products = await Product.findAll()
-    res.json(products)
+    res.json(products).status(200)
   } catch (err) {
     console.log('error thrown')
     next(err)
@@ -30,14 +29,13 @@ router.get('/:productId', async (req, res, next) => {
   try {
     const product = await Product.findByPk(req.params.productId)
     if (!product) return res.send('Product Not Found').status(404)
-    res.json(product)
+    res.json(product).status(200)
   } catch (err) {
     next(err)
   }
 })
 
-//POST /api/campuses
-//updated post route to be secure
+//POST /api/products
 router.post('/', adminsOnly, async (req, res, next) => {
   const {
     name,
@@ -70,7 +68,6 @@ router.post('/', adminsOnly, async (req, res, next) => {
 router.delete('/:productId', adminsOnly, async (req, res, next) => {
   try {
     await Product.destroy({where: {id: req.params.productId}})
-    //send status console not showing?
     res.status(204).send('Item deleted')
   } catch (err) {
     console.log('Error in delete products route')
@@ -79,7 +76,6 @@ router.delete('/:productId', adminsOnly, async (req, res, next) => {
 })
 
 //PUT /api/products/:productId
-//updated post route to be secure
 router.put('/:productId', adminsOnly, async (req, res, next) => {
   const {
     name,
@@ -101,7 +97,7 @@ router.put('/:productId', adminsOnly, async (req, res, next) => {
       description,
       location
     })
-    res.json(updatedProduct)
+    res.json(updatedProduct).status(200)
   } catch (err) {
     console.log('Error in update product route')
     next(err)

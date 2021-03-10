@@ -1,5 +1,4 @@
 const router = require('express').Router()
-//ensure model name matches new db
 const {Product, Booking, Order, User, Cart} = require('../db/models')
 module.exports = router
 
@@ -40,7 +39,6 @@ router.get('/:userId', async (req, res, next) => {
 })
 
 // PUT api/cart/:productId modifies the order of the cart
-// TODO: adjusts logic for session
 router.put('/:productId', async (req, res, next) => {
   // req.body. needs updated quanity and unit price
   const productId = req.params.productId
@@ -78,7 +76,6 @@ router.put('/:productId', async (req, res, next) => {
 // Post api/cart/add/:productId
 //makes a booking for an item if an order exists.
 //If an order does not exist, make one and add a booking.
-
 router.post('/add/:productId', async (req, res, next) => {
   const productId = req.params.productId
   const {quantity, unitPrice, userId} = req.body
@@ -111,7 +108,7 @@ router.post('/add/:productId', async (req, res, next) => {
 
       const addedItem = cart.add(foundProduct)
       req.session.cart = cart.getCart()
-      return res.json(booking).status(200)
+      return res.json(booking).status(201)
     } catch (error) {
       next(error)
       console.log('err', error)
@@ -127,7 +124,7 @@ router.post('/add/:productId', async (req, res, next) => {
 
       const addedItem = cart.add(foundProduct)
       req.session.cart = cart.getCart()
-      res.json(addedItem).status(200)
+      res.json(addedItem).status(201)
     } catch (error) {
       next(error)
     }
@@ -147,7 +144,6 @@ router.delete('/:productId/:orderId', async (req, res, next) => {
       res.json('Deleted').status(204)
     } else {
       let cart = new Cart(req.session.cart ? req.session.cart : {})
-
       cart.remove(productId)
       req.session.cart = cart.getCart()
 
